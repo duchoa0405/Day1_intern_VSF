@@ -47,21 +47,23 @@ Matches bank payouts with order records to uncover weight penalties, campaign fe
 
 ## 3. Core Scope (MVP - 11/09/2026)
 
-### Feature 1: Inbound Purchase Orders & Landed Cost Engine
-* **Purpose:** Ensures accurate unit cost before any stock enters inventory.
-* **Key Capabilities:**
-  - Create Purchase Orders (PO) linked to suppliers.
-  - Enter SKU breakdown (Model - Color - Size), quantities, and wholesale costs.
-  - Automatically allocate freight/handling fees across items.
-  - Generate SKU barcodes for polybag labeling.
+### Feature 1: Inbound Landed Cost Engine (True Warehouse Inbound Cost)
+* **Business Problem & Purpose:** Prevents distorted profit margins caused by static wholesale costing. In ready-to-wear fashion, when ordering 500 units at 75,000 VND ($3.00) with a 1,000,000 VND ($40.00) bulk truck freight fee and 1,000 VND polybag tag surcharge, the true landed unit cost is **78,000 VND ($3.12)**, not 75,000 VND.
+* **Core Capabilities & Interactive UI/UX:**
+  - **Live Landed Cost Calculator:** Real-time dynamic cost distribution preview as freight and handling fees are entered before finalizing the PO.
+  - **Transparent Cost Formula per SKU:**
+    $$\text{Landed Cost}_{\text{SKU}} = \text{Wholesale Unit Price} + \frac{\text{Total Bulk Freight} + \text{Handling}}{\text{Total Units Received}} + \text{Polybag/Tag Cost}$$
+  - **Automated Inventory Inbound:** Instantly syncs PO records, increments variant stock by size/color, and generates SKU barcodes for polybag labeling.
 
-### Feature 2: Order Fulfillment & Real-Time Net Profit Engine
-* **Purpose:** Directly answers: *"How much net profit did each order actually generate?"*
-* **Key Capabilities:**
-  - Ingest orders from Shopee, TikTok Shop, and Facebook POS.
-  - Deduct stock via FIFO and freeze unit COGS at dispatch.
-  - Calculate real-time net profit per order:
-    $$\text{Net Profit} = \text{Net Payout} - \text{Landed COGS} - \text{Platform Fees} - \text{Packaging} - \text{Return Losses}$$
+### Feature 2: Product & Order Net Profit Engine (True Take-Home Margin)
+* **Business Problem & Purpose:** Solves the *"High Revenue, Empty Wallet"* trap. Selling a 189,000 VND dress on TikTok Shop / Shopee gets eroded by platform commission, payment processing, campaign vouchers, packaging polybags, and return shrinkage. Directly answers: *"How much real cash does each product and order actually bring to the shop?"*
+* **Core Capabilities & Interactive UI/UX:**
+  - **Financial Waterfall Breakdown:** Visual step-by-step cashflow deduction for every order item:
+    $$\text{Gross Customer Payment} \rightarrow -\text{Landed COGS} \rightarrow -\text{Platform Fees} \rightarrow -\text{Packaging} \rightarrow -\text{Return Losses} = \mathbf{\text{True Net Profit}}$$
+  - **Real-Time Profitability Indicators:** Dynamic color-coded badges showing exact net cash profit and net margin percentage (`Net Margin %`).
+  - **Interactive Return Loss Accounting:** One-click financial triage to immediately reflect return losses:
+    - *Intact Return:* Restocked; loss booked = 2-way shipping + damaged packaging (e.g., -35,000 VND).
+    - *Damaged / Swapped Return:* Sent to clearance; **100% unit COGS is written off** as shrinkage loss.
 
 ---
 
