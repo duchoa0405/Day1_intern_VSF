@@ -1,96 +1,96 @@
-# 👗 FashionRev-Ops: Hệ Thống Quản Lý Doanh Thu & Lợi Nhuận Thực Tế (Shop Thời Trang Online)
+#  FashionRev-Ops: Apparel Cashflow & Net Margin Management System
 
-> **Giải pháp chuyển đổi số và quản trị tài chính - dòng tiền chuyên sâu dành cho mô hình kinh doanh quần áo may sẵn / nhập hàng sẵn (Fast-Fashion E-commerce).**  
-> **Kiến trúc hệ thống:** Xây dựng xoay quanh **3 Tính Năng Cốt Lõi** bám sát quy trình vận hành và đối soát thực tế.
+> **Digital transformation and financial control platform specifically engineered for ready-to-wear fast-fashion e-commerce retail.**  
+> **System Architecture:** Structured around **3 Core Functional Engines** reflecting actual fashion warehousing, multi-channel selling, and accounting reconciliation.
 
 ---
 
-## 📌 1. Bối Cảnh & Bài Toán Kinh Doanh Cốt Lõi (Top-Down & Core Pain Points)
+##  1. Business Context & Core Pain Points (Top-Down Analysis)
 
-Kinh doanh thời trang online theo mô hình **nhập hàng may sẵn** có tốc độ xoay vòng vốn cực nhanh nhưng cũng tiềm ẩn rủi ro thất thoát biên lợi nhuận cao nhất trong ngành E-commerce:
+Fast-fashion e-commerce operating under the **pre-stocked / ready-to-wear model** experiences rapid capital turnover but suffers from the highest profit leakage in e-commerce:
 
-1. **Vòng đời sản phẩm ngắn (Hot Trend 2–4 tuần):** Không có giá vốn chuẩn xác và không đo lường được lãi ròng theo từng biến thể (Size/Màu), lợi nhuận của đợt bán trước sẽ bị chôn vùi vào tiền nhập hàng tồn đọng (*Bẫy "Doanh thu ảo - Tiền mặt âm"*).
-2. **Giá vốn biến động liên tục (Dynamic Landed Cost):** Cùng 1 mẫu áo, đợt 1 nhập giá sỉ khác, đợt 2 nhập bổ sung cước xe tải tăng. Nếu lấy giá sỉ hóa đơn làm giá vốn sẽ bị "ăn mòn" 3.000đ – 5.000đ tiền cước trên mỗi sản phẩm.
-3. **Phí sàn trừ ngầm (Platform Fee Creep):** Hoa hồng sàn (9%–12%), voucher tài trợ, phụ phí đóng gói ăn mòn phần lớn lợi nhuận khiến shop lầm tưởng bán được nhiều là có lãi nếu không kiểm soát ở cấp độ đơn vị sản phẩm.
+1. **Short Trend Lifecycle (2–4 Weeks):** Without variant-level (Size/Color) true landed cost and take-home margin tracking, profits from earlier winning batches get swallowed by slow-moving stock (*"Paper Profit, Negative Cash Flow"*).
+2. **Volatile Landed Costs:** Bulk truck freight and port handling fees change every trip. Relying on invoice wholesale prices hides $0.15–$0.30 of freight per item, eroding profit margins silently.
+3. **Marketplace Fee Creep:** Commission fees (9%–12%), vouchers, packaging expenses, and weight overcharges eat away gross margins unless audited at the unit level.
 
 ```mermaid
 flowchart TD
-    A[Nhà Cung Cấp / Xưởng May] -->|1. PO + Cước xe tải| B(Hệ Thống Phân Bổ Landed Cost)
-    B -->|2. Thêm Mẫu Mới & Nhập Kho| C[Kho Hàng / Tồn Kho Đa Biến Thể]
-    C -->|3. Đóng Đơn & Snapshot COGS| D[Kênh Bán: TikTok / Shopee / FB]
-    D -->|4. Đối Soát Đơn Hàng| E[Thác Nước Lợi Nhuận Ròng]
+    A[Garment Factory / Supplier] -->|1. PO + Truck Freight| B(Landed Cost Allocation Engine)
+    B -->|2. Add New SKUs & Inbound Stock| C[Variant Inventory Warehouse]
+    C -->|3. Dispatch Orders & Freeze COGS| D[Channels: TikTok / Shopee / FB]
+    D -->|4. Order Settlement| E[Order Net Profit Waterfall]
     E --> G[Executive Financial Dashboard]
 ```
 
 ---
 
-## 🚀 2. Ba Tính Năng Cốt Lõi (Core Functional Engines - MVP Scope)
+##  2. The 3 Core Functional Engines (MVP Scope)
 
-Hệ thống được thiết kế top-down tập trung giải quyết triệt để **3 Tính Năng Cốt Lõi** xoay quanh bài toán giá vốn và lợi nhuận thực tế:
+Instead of treating the system as a generic ERP, FashionRev-Ops focuses on **3 Core Specialized Engines**:
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────┐
-│                   FASHIONREV-OPS: 3 TÍNH NĂNG CỐT LÕI (MVP)                     │
+│                   FASHIONREV-OPS: 3 CORE FUNCTIONAL ENGINES (MVP)                │
 ├───────────────────────────────┬──────────────────────────────────────────────────┤
 │ 1. Inbound Landed Cost Engine │ 2. Dynamic Inbound SKU Management                │
-│    • Phân bổ tự động cước xe  │    • Thêm mẫu mới/size mới vào lô động           │
-│    • Công thức tính chuẩn xác │    • Xem trước giá vốn dự kiến trên Modal        │
-│    • Tiêu điểm Landed Cost    │    • Tự động chia lại cước cho toàn bộ lô        │
+│    • Automated freight split  │    • Add new fashion models/sizes dynamically    │
+│    • Unit Landed Cost formula │    • Pre-calculate landed cost inside modal      │
+│    • Landed Cost spotlight    │    • Auto-redistribute freight across batch      │
 ├───────────────────────────────┴──────────────────────────────────────────────────┤
-│ 3. Order Net Profit Waterfall Ledger (Đa Kênh TMĐT)                              │
-│    • Bóc tách 5 bước dòng tiền: Khách trả -> Phí sàn -> Landed COGS -> Bao bì    │
-│    • Phân tích biên lợi nhuận ròng đút túi (Net Margin %)                        │
-│    • Bộ lọc thông minh: TikTok Shop, Shopee, Facebook POS                        │
+│ 3. Order Net Profit Waterfall Ledger (Multi-Channel E-Commerce)                  │
+│    • 5-step deduction ledger: Paid -> Fees -> Landed COGS -> Packaging           │
+│    • Take-home unit net margin % analysis                                        │
+│    • Multi-channel filtering: TikTok Shop, Shopee, Facebook POS                  │
 └──────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 🔹 Tính Năng 1: Phân Bổ Giá Vốn Cập Kho Tự Động (Inbound Landed Cost Engine)
-* **Bài toán giải quyết:** Tự động chia đều chi phí cước xe tải và phụ phí bốc dỡ vào từng chiếc áo nhập kho.
-* **Công thức toán học minh bạch:**
-  $$\text{Landed Cost}_{\text{SKU}} = \text{Giá Mua Sỉ} + \frac{\text{Cước Xe Tải} + \text{Phí Bốc Dỡ}}{\text{Tổng Số Lượng Chiếc Nhập}} + \text{Phí Túi Zip \& Tem}$$
-* **Trực quan hóa:** Khung tiêu điểm *Landed Cost Spotlight* và thanh cơ cấu chi phí 3 màu (Giá sỉ 96.1% • Cước xe 2.6% • Bao bì 1.3%).
+### 🔹 Feature 1: Inbound Landed Cost Engine (True Warehouse Cost)
+* **Business Problem:** Bulk freight and handling fees are paid at the shipment level, not per item.
+* **Transparent Mathematical Formula:**
+  $$\text{Landed Cost}_{\text{SKU}} = \text{Wholesale Price} + \frac{\text{Truck Freight} + \text{Handling Fees}}{\text{Total Units In Batch}} + \text{Polybag \& Tag Fee}$$
+* **Interactive UI:** Real-time calculation preview and 3-color stacked cost composition bar (Wholesale 96.1% • Freight 2.6% • Packaging 1.3%).
 
-### 🔹 Tính Năng 2: Quản Lý & Thêm Mẫu Mới Vào Lô Hàng Động (Dynamic Inbound SKU Management)
-* **Bài toán giải quyết:** Cho phép chủ shop / thủ kho phát sinh thêm bất kỳ mẫu áo, màu, size mới nào vào lô hàng đang nhập.
-* **Cơ chế vận hành:**
-  - Hộp thoại Modal: Nhập mã SKU, tên mẫu áo, chất liệu vải, size (`Size S` $\rightarrow$ `Free Size`), số lượng và giá sỉ.
-  - **Live Projected Landed Cost:** Tự tính trước giá vốn dự kiến ngay trên Modal trước khi thêm.
-  - **Tự động chia lại cước:** Khi thêm mẫu mới, tổng sản lượng lô tăng lên, hệ thống tự động tính lại cước bổ đầu và cập nhật lại toàn bộ bảng giá vốn của các mẫu còn lại.
-  - Hỗ trợ nút xóa mẫu `[✕]` trên từng dòng và đồng bộ tức thì sang Database catalog qua `POST /api/v1/catalog/variants`.
+### 🔹 Feature 2: Dynamic Inbound SKU Management (Add New Models On The Fly)
+* **Business Problem:** Inbound shipments frequently include unplanned styles, new sizes, or supplementary colorways.
+* **Capabilities:**
+  - `[ Add New SKU to Batch]` Modal: Enter SKU Code, Variant/Size (`Size S` to `Free Size`), Product Name, Fabric Description, Inbound Qty, and Wholesale Price.
+  - **Live Projected Landed Cost:** Previews the exact landed cost inside the modal before adding.
+  - **Automatic Freight Re-allocation:** As the batch quantity increases, truck freight is automatically divided across all items, instantly updating landed costs for the entire PO.
+  - One-click row removal `[✕]` with automatic freight adjustment and catalog persistence via `POST /api/v1/catalog/variants`.
 
-### 🔹 Tính Năng 3: Thác Nước Lợi Nhuận Ròng Từng Đơn (Order Net Profit Waterfall Ledger)
-* **Bài toán giải quyết:** Bóc tách từng đồng chi phí bị trừ ngầm để biết chính xác mỗi đơn hàng thực nhận bao nhiêu tiền vào tài khoản.
-* **Luồng khấu trừ 5 bước (Waterfall):**
-  $$\text{Doanh Thu Khách Trả} \rightarrow -\text{Phí Sàn \& Voucher} \rightarrow -\text{Giá Vốn Landed COGS} \rightarrow -\text{Hộp Gói Hàng} = \mathbf{\text{Lợi Nhuận Ròng Thực Tế}}$$
-* **Bộ lọc thông minh:** Lọc theo kênh bán (*TikTok Shop, Shopee, Facebook POS*) và lọc theo biên lãi (*Lãi cao >40%, Lãi mỏng <20%, Đơn hòa vốn/lỗ*).
+### 🔹 Feature 3: Order Net Profit Waterfall Ledger (Take-Home Unit Margin)
+* **Business Problem:** High gross marketplace sales mask severe fee deductions.
+* **5-Step Cashflow Waterfall Deduction:**
+  $$\text{Customer Paid} \rightarrow -\text{Platform Commission \& Vouchers} \rightarrow -\text{Frozen Landed COGS} \rightarrow -\text{Packaging Box} = \mathbf{\text{True Net Profit In Pocket}}$$
+* **Multi-Dimensional Filters:** Filter by channel (*TikTok Shop, Shopee, Facebook POS*) and by profitability tier (*High Margin >40%, Low Margin <20%, Loss-making*).
 
-> **Lộ trình Mở rộng Giai đoạn 2 (Future Roadmap):**  
-> *Tính năng 4: Phân loại vật lý và chốt lỗ kế toán hàng hoàn (Return Loss Triage & Accounting)* được dời sang Phase 2 để ưu tiên tập trung tối ưu hóa 3 tính năng cốt lõi trên.
+> **Future Scope Roadmap (Phase 2):**  
+> *Feature 4: Return Loss Triage & Accounting (Financial Return Allocation)* is scheduled for Phase 2 to focus entirely on core landed cost and net margin transparency for the MVP release.
 
 ---
 
-## 👥 3. Phân Tích Vai Trò & Sơ Đồ Use Case (Roles & Use Case Diagram)
+##  3. Roles & Use Case Diagram
 
-Xem tài liệu chi tiết tại: [docs/usecase.md](file:///c:/AI_thuc_chien_khoa_3/VSF/Day1_intern_VSF/docs/usecase.md)
+Detailed documentation: [docs/usecase.md](docs/usecase.md)
 
-### Danh Sách Actors
-- **Thủ kho / Vận hành (Ops Staff):** Nhập phiếu hàng, khai báo cước xe, thêm mẫu mới vào lô, điều chỉnh số lượng và in mã vạch barcode.
-- **Chủ shop / Kế toán (Shop Owner / Finance):** Giám sát bảng Thác nước lợi nhuận đa sàn, đối soát ví sàn, theo dõi 4 KPI tài chính và tối ưu danh mục sản phẩm sinh lời.
+### Actors
+- **Thủ kho / Vận hành (Ops Staff):** Receives inbound trucks, inputs freight fees, adds new SKUs to batches, adjusts quantities, and prints barcode labels.
+- **Chủ shop / Kế toán (Shop Owner / Finance):** Monitors marketplace deductions, reconciles platform wallets, tracks high-level financial KPIs, and optimizes product catalog profitability.
 
-### Sơ Đồ Mermaid Use Case
+### Use Case Diagram (Mermaid)
 ```mermaid
 graph LR
-    UserOps(["👷 Thủ kho / Vận hành"])
-    UserOwner(["👑 Chủ shop / Tài chính"])
+    UserOps([" Ops Staff"])
+    UserOwner([" Shop Owner / Finance"])
 
-    subgraph System ["Hệ thống FashionRev-Ops (3 Tính Năng Cốt Lõi)"]
-        UC1["1. Tạo Phiếu Nhập Hàng PO"]
-        UC2["2. Phân Bổ Cước Xe Landed Cost"]
-        UC3["3. Thêm Mẫu Mới Vào Lô (Dynamic SKU)"]
-        UC4["4. Điều Chỉnh / Xóa Mẫu Khỏi Lô"]
-        UC5["5. Xem Thác Nước Lãi Ròng Từng Đơn"]
-        UC6["6. Lọc Đơn Hàng Đa Sàn (TikTok/Shopee/FB)"]
-        UC7["7. Giám Sát 4 KPI Tài Chính Cốt Lõi"]
+    subgraph System ["FashionRev-Ops Financial Control System (3 Core Features)"]
+        UC1["1. Create Inbound PO"]
+        UC2["2. Auto-Allocate Landed Cost"]
+        UC3["3. Add New SKU to Batch"]
+        UC4["4. Adjust / Remove SKU from Batch"]
+        UC5["5. View Order Net Profit Waterfall"]
+        UC6["6. Multi-Channel Margin Filtering"]
+        UC7["7. Monitor Executive Financial KPIs"]
     end
 
     UserOps --> UC1
@@ -104,67 +104,59 @@ graph LR
     UserOwner --> UC7
 
     UC1 -.->|include| UC2
-    UC3 -.->|tự động chia lại cước| UC2
-    UC4 -.->|cập nhật sản lượng| UC2
-    UC5 -.->|tổng hợp doanh thu & lãi| UC7
+    UC3 -.->|re-distribute freight| UC2
+    UC4 -.->|update batch volume| UC2
+    UC5 -.->|aggregate profit| UC7
 ```
 
 ---
 
-## 🏛️ 4. Kiến Trúc Thông Tin (Information Architecture - IA)
+##  4. Information Architecture (IA)
 
-Xem tài liệu chi tiết tại: [docs/information_architecture.md](file:///c:/AI_thuc_chien_khoa_3/VSF/Day1_intern_VSF/docs/information_architecture.md)
+Detailed documentation: [docs/information_architecture.md](docs/information_architecture.md)
 
-Cấu trúc phân tầng dữ liệu qua 3 Màn hình Tabs:
 ```plaintext
-CẤU TRÚC HỆ THỐNG (INFORMATION ARCHITECTURE)
-├── [Tab 1] Overview Dashboard (Tổng quan Hoạt động & Lợi nhuận)
-│   ├── Khối 4 KPI Tài chính: Doanh thu sàn | Giá vốn COGS | Phí sàn & bao bì | Lợi nhuận ròng thực
-│   ├── Khối tóm tắt Nhập hàng & Landed Cost (Công thức, bảng SKU, nút tạo mới)
-│   └── Khối tóm tắt Đơn bán & Thác nước chi phí đa sàn (TikTok Shop, Shopee, FB POS)
+INFORMATION ARCHITECTURE (3 TABS)
+├── [Tab 1] Overview Dashboard
+│   ├── Top 4 Financial KPIs: Gross Sales | Inbound COGS | Platform & Packaging Fees | True Net Profit
+│   ├── Inbound Landed Cost Summary Card
+│   └── Sales Order Waterfall Stream Card
 │
-├── [Tab 2] Inbound Landed Cost (Chi tiết Phiếu Nhập & Phân Bổ Giá Vốn)
-│   ├── Breadcrumbs điều hướng & Nút đồng bộ kế toán ERP
-│   ├── Cột trái: Thông số lô hàng (Xưởng may, Cước xe, Phí bốc dỡ, Phí túi zip)
-│   ├── Cột phải: Xem trước phân bổ thời gian thực (Cước bổ đầu, Tiêu điểm Landed Cost)
-│   ├── Bảng SKU chi tiết: Tìm kiếm, Lọc Size, Nút [➕ Add New SKU to Batch], Nút xóa [✕]
-│   └── Modal Thêm Mẫu Mới: Điền SKU, Size, Tên áo, Vải, SL, Giá sỉ -> Tự động chia lại cước
+├── [Tab 2] Inbound Landed Cost Engine
+│   ├── Breadcrumbs & ERP Sync Controls
+│   ├── Left: Batch Parameters (Supplier, Truck Freight, Handling Fee, Polybag Fee)
+│   ├── Right: Real-time Allocation Preview (Unit Freight, Landed Cost Spotlight)
+│   ├── Interactive SKU Table: Search, Size Filter Pills, [➕ Add New SKU to Batch], [✕] Remove
+│   └── Add SKU Modal: Dynamic form with live projected landed cost preview
 │
-└── [Tab 3] Order Net Profit (Thác Nước Lợi Nhuận Đơn Hàng Đa Sàn)
-    ├── Thẻ chỉ số: Tỷ suất biên lãi ròng trung bình (45.2%) | Tổng đơn hoàn thành (2,450 đơn)
-    ├── Bộ lọc đa chiều: Lọc theo kênh bán, Kỳ đối soát, Lọc theo biên lãi (>40%, <20%, đơn lỗ)
-    └── Bảng Waterfall Ledger 7 cột: Bóc tách từng khoản trừ từ Doanh thu đến Lãi đút túi
+└── [Tab 3] Order Net Profit Waterfall Ledger
+    ├── Net Margin & Fulfilled Volume KPI Pills
+    ├── Channel Toolbar: All Channels | TikTok Shop | Shopee | Facebook POS
+    └── Waterfall Ledger Table: 7 columns tracking deductions from Revenue to Pocketed Cash
 ```
 
 ---
 
-## 🖼️ 5. Hình Ảnh Giao Diện Thực Tế (UI/UX Mockups & Screenshots)
+##  5. UI/UX Screenshots & Interface
 
-Giao diện được thiết kế theo phong cách **Light SaaS tối giản, tinh tế** và hiển thị 100% bằng tiếng Anh chuẩn e-commerce:
+Designed with a clean, modern **Light SaaS aesthetic** and fully English-localized:
 
-### 5.1. Màn Hình 1: Tổng Quan Dashboard (Overview Dashboard)
+### 5.1. Overview Dashboard
 ![Overview Dashboard](docs/screenshots/dashboard_overview.png)
-*Tích hợp 4 KPI tài chính trên cùng, bộ tính Landed Cost bên trái, Thác nước chi phí đơn hàng bên phải.*
 
----
-
-### 5.2. Màn Hình 2: Chi Tiết Phiếu Nhập & Phân Bổ Giá Vốn (Inbound Landed Cost)
+### 5.2. Inbound Landed Cost Engine
 ![Inbound Landed Cost](docs/screenshots/inbound_landed_cost.png)
-*Bộ thông số cước xe, thuật toán phân bổ thời gian thực, bảng danh mục biến thể SKU có nút **`[➕ Add New SKU to Batch]`** để thêm mẫu mới.*
 
----
-
-### 5.3. Màn Hình 3: Thác Nước Lợi Nhuận Đơn Hàng (Order Net Profit Waterfall Ledger)
+### 5.3. Order Net Profit Waterfall Ledger
 ![Order Net Profit](docs/screenshots/order_net_profit.png)
-*Bảng Waterfall Ledger bóc tách dòng tiền từng đơn hàng đa sàn từ Doanh thu khách trả, Phí hoa hồng sàn, Landed COGS và Túi bọc hàng để tính chính xác Lãi ròng đút túi.*
 
 ---
 
-## 🗄️ 6. Thiết Kế Cơ Sở Dữ Liệu (Database Schema & DBML)
+##  6. Database Design (DBML & ERD)
 
-- File thiết kế chuẩn DBML: [docs/schema.dbml](file:///c:/AI_thuc_chien_khoa_3/VSF/Day1_intern_VSF/docs/schema.dbml)  
-  *(Dán toàn bộ mã trong file này vào [dbdiagram.io](https://dbdiagram.io/) để xuất biểu đồ quan hệ ERD trực quan).*
-- File mã nguồn SQL DDL: `init-scripts/01_schema.sql` (PostgreSQL 16).
+- DBML Schema File: [docs/schema.dbml](docs/schema.dbml)  
+  *(Paste this file into [dbdiagram.io](https://dbdiagram.io/) for interactive relational diagrams).*
+- SQL DDL File: `init-scripts/01_schema.sql` (PostgreSQL 16).
 
 ```mermaid
 erDiagram
@@ -222,35 +214,26 @@ erDiagram
 
 ---
 
-## ⚙️ 7. Hướng Dẫn Cài Đặt & Chạy Hệ Thống (Getting Started)
+##  7. Getting Started
 
-### Yêu Cầu Môi Trường
-- **Python:** 3.11+
-- **Docker & Docker Compose:** Dùng để chạy PostgreSQL 16
-- **Trình duyệt web:** Chrome, Edge, Safari
+### Prerequisites
+- Python 3.11+
+- Docker & Docker Compose (for PostgreSQL 16)
+- Modern Web Browser (Chrome, Edge, Safari)
 
-### Các Bước Khởi Động
-
-#### 1. Khởi động Cơ sở dữ liệu PostgreSQL
+### Quick Run
 ```bash
+# 1. Start PostgreSQL Database
 docker compose up -d
-```
-Database chạy tại cổng `5433` (được ánh xạ từ cổng container 5432) với thông tin kết nối trong `.env`:
-`postgresql://postgres:postgrespassword@localhost:5433/fashionrev_db`
 
-#### 2. Khởi động Backend FastAPI
-```bash
-# Cài đặt thư viện phụ thuộc
+# 2. Install dependencies & start FastAPI backend
 pip install -r requirements.txt
-
-# Khởi động máy chủ backend trên cổng 8088
 python -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8088 --reload
-```
 
-#### 3. Truy Cập Hệ Thống
-- **Giao diện Web UI:** [http://localhost:8088/](http://localhost:8088/)
-- **Tài liệu API Swagger:** [http://localhost:8088/docs](http://localhost:8088/docs)
-- **Kiểm tra trạng thái Health:** [http://localhost:8088/api/v1/health](http://localhost:8088/api/v1/health)
+# 3. Access Web Application
+# Frontend UI: http://localhost:8088/
+# Swagger Docs: http://localhost:8088/docs
+```
 
 ---
 
