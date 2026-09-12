@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FashionRev-Ops | Apparel Cashflow & Net Margin Management System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-wrapper">
+
+        <!-- =================================================================== -->
+        <!-- TOP NAVIGATION HEADER                                               -->
+        <!-- =================================================================== -->
+        <header class="main-header">
+            <div class="brand-section">
+                <div class="brand-badge">FRO</div>
+                <div class="brand-info">
+                    <h1>FashionRev-Ops</h1>
+                    <p>Apparel Cashflow & Profit Management System</p>
+                </div>
+            </div>
+
+            <!-- Tab Buttons -->
+            <nav class="nav-tab-group" role="tablist">
+                <button class="nav-tab-btn active" data-tab="tab-overview" id="btn-tab-overview" role="tab">
+                    <span>📊</span> Overview Dashboard
+                </button>
+                <button class="nav-tab-btn" data-tab="tab-landed-cost" id="btn-tab-landed-cost" role="tab">
+                    <span>📦</span> Inbound Landed Cost
+                </button>
+                <button class="nav-tab-btn" data-tab="tab-net-profit" id="btn-tab-net-profit" role="tab">
+                    <span>💰</span> Order Net Profit
+                </button>
+            </nav>
+
+            <!-- Status Indicator & User Profile -->
+            <div class="header-meta">
+                <div class="warehouse-status-chip">
+                    <span class="pulse-dot"></span>
+                    <span>Tan Binh Warehouse • TikTok / Shopee / FB Connected</span>
+                </div>
+                <div class="user-badge">
+                    <div class="user-avatar">HL</div>
+                    <div class="user-text">
+                        <span class="user-name">Huong Ly</span>
+                        <span class="user-role">Shop Owner (Admin)</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- =================================================================== -->
+        <!-- TAB 1: OVERVIEW DASHBOARD (dashboard__overview.png)                  -->
+        <!-- =================================================================== -->
+        <main class="tab-pane active" id="tab-overview">
+            <!-- Page Title Bar -->
+            <div class="page-title-row">
+                <div class="page-title-group">
+                    <h2>Sales Performance & Net Profit Overview</h2>
+                    <p>Real-time synchronized data from Shopee, TikTok Shop, and Facebook POS</p>
+                </div>
+                <div class="filter-period-group">
+                    <span>Period:</span>
+                    <button class="filter-pill-btn active">This Month</button>
+                    <button class="filter-pill-btn">Today</button>
+                    <button class="filter-pill-btn">Last 7 Days</button>
+                </div>
+            </div>
+
+            <!-- Top 4 Financial KPI Cards -->
+            <section class="kpi-cards-grid">
+                <!-- KPI 1: Gross Sales -->
+                <div class="kpi-card">
+                    <div class="kpi-card-header">
+                        <span class="kpi-card-title">TOTAL GROSS SALES</span>
+                        <span class="kpi-badge badge-green">+14.2%</span>
+                    </div>
+                    <div class="kpi-amount" id="kpi-gross-sales">185.450.000 <span class="currency">₫</span></div>
+                    <div>
+                        <div class="channel-share-bar">
+                            <div class="share-seg-shopee" title="Shopee: 58%"></div>
+                            <div class="share-seg-tiktok" title="TikTok: 32%"></div>
+                            <div class="share-seg-fb" title="Facebook: 10%"></div>
+                        </div>
+                        <div class="channel-share-labels">
+                            <span>Shopee: 58%</span>
+                            <span>TikTok: 32%</span>
+                            <span>FB: 10%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPI 2: Total COGS -->
+                <div class="kpi-card">
+                    <div class="kpi-card-header">
+                        <span class="kpi-card-title">TOTAL INBOUND COGS</span>
+                        <span class="kpi-badge badge-gray">Benchmark 41%</span>
+                    </div>
+                    <div class="kpi-amount" id="kpi-total-cogs">76.200.000 <span class="currency">₫</span></div>
+                    <div class="kpi-footer-note">
+                        <span>Fulfilled Volume:</span>
+                        <strong>2,450 orders</strong>
+                    </div>
+                </div>
+
+                <!-- KPI 3: Platform & Packaging Fees -->
+                <div class="kpi-card">
+                    <div class="kpi-card-header">
+                        <span class="kpi-card-title">PLATFORM & PACKAGING FEES</span>
+                        <span class="kpi-badge badge-gray">Rate: 19.6%</span>
+                    </div>
+                    <div class="kpi-amount text-loss" id="kpi-platform-fees">36.350.000 <span class="currency">₫</span></div>
+                    <div class="kpi-footer-note">
+                        <span>Marketplace Commissions:</span>
+                        <strong style="color:var(--text-main);">18.900.000 ₫</strong>
+                    </div>
+                </div>
+
+                <!-- KPI 4: True Net Profit -->
+                <div class="kpi-card highlight-profit">
+                    <div class="kpi-card-header">
+                        <span class="kpi-card-title">TRUE NET PROFIT</span>
+                        <span class="kpi-badge badge-green">Net Margin 39.3%</span>
+                    </div>
+                    <div class="kpi-amount text-profit" id="kpi-net-profit">72.900.000 <span class="currency">₫</span></div>
+                    <div class="kpi-footer-note">
+                        <span>After platform fees & freight:</span>
+                        <strong style="color:var(--success-green);">Real Net Pocketed</strong>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2-Column Main Section -->
+            <div class="two-col-layout">
+                <!-- Left Panel: Inbound & Landed Cost Engine -->
+                <section class="card-box">
+                    <div class="card-box-header">
+                        <div>
+                            <h3 class="card-box-title">Inbound PO & Automated Landed Cost Calculation</h3>
+                            <p class="card-box-sub">Direct allocation of shipping freight and packaging per garment unit</p>
+                        </div>
+                        <span class="kpi-badge badge-green">Auto-Allocated</span>
+                    </div>
+
+                    <div class="form-field-group">
+                        <label class="form-label" for="ov-supplier-select">Supplier / Garment Factory</label>
+                        <select class="form-select" id="ov-supplier-select">
+                            <option value="1">Tan Binh Garment Factory (Code: NCC-TB-08)</option>
+                            <option value="2">Ninh Hiep Central Warehouse (Code: PO-2026-NINH-HIEP-01)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row-2col">
+                        <div class="form-field-group">
+                            <label class="form-label" for="ov-truck-freight">Truck Inbound Freight</label>
+                            <input type="text" class="form-input" id="ov-truck-freight" value="1.000.000 ₫" readonly>
+                        </div>
+                        <div class="form-field-group">
+                            <label class="form-label" for="ov-polybag-cost">Polybag & Tag Fee</label>
+                            <input type="text" class="form-input" id="ov-polybag-cost" value="1.000 ₫/pc" readonly>
+                        </div>
+                    </div>
+
+                    <!-- Live Formula Box -->
+                    <div class="formula-callout-box">
+                        <div class="formula-header">
+                            <span>Landed Cost Formula</span>
+                            <span>Batch: 500 pcs</span>
+                        </div>
+                        <div class="formula-math-row">
+                            <span>Wholesale 75.000₫</span> +
+                            <span>Freight 2.000₫</span> +
+                            <span>Bag 1.000₫</span> =
+                            <span class="math-highlight">78.000 ₫/pc</span>
+                        </div>
+                        <p class="formula-subtext">1,000,000₫ truck freight allocated across 500 pcs (+2,000₫/pc).</p>
+                    </div>
+
+                    <!-- Inbound Batch Breakdown Table -->
+                    <div class="table-container">
+                        <table class="clean-table">
+                            <thead>
+                                <tr>
+                                    <th>PRODUCT / SKU</th>
+                                    <th>QTY</th>
+                                    <th>WHOLESALE</th>
+                                    <th>FREIGHT ALLOC.</th>
+                                    <th>LANDED COST</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="sku-name-cell">
+                                        <strong>Oversized T-Shirt M/L</strong>
+                                        <span class="sku-sub">SKU-AT-01</span>
+                                    </td>
+                                    <td>500</td>
+                                    <td>75.000 ₫</td>
+                                    <td style="color:var(--primary-blue); font-weight:700;">+2.000 ₫</td>
+                                    <td><span class="landed-pill">78.000 ₫</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <button class="btn-primary-dark" onclick="switchToTab('tab-landed-cost')">
+                        Confirm Inbound Receipt & Generate Barcodes
+                    </button>
+                    <button class="btn-secondary" style="width:100%; margin-top:8px; justify-content:center; gap:6px;" onclick="switchToTab('tab-landed-cost'); setTimeout(openAddSkuModal, 250);">
+                        <span>➕</span> Add New SKU / Garment Model
+                    </button>
+                </section>
+
+                <!-- Right Panel: Sales Order Management & Net Profit -->
+                <section class="card-box">
+                    <div class="card-box-header">
+                        <div>
+                            <h3 class="card-box-title">Sales Order Management & Net Profit per Product</h3>
+                            <p class="card-box-sub">Waterfall deduction: Gross revenue, platform commission, packaging & landed cost</p>
+                        </div>
+                        <span class="kpi-badge badge-gray">3 Sample Orders</span>
+                    </div>
+
+                    <div class="order-waterfall-stream" id="overview-waterfall-stream">
+                        <!-- Order 1: TikTok -->
+                        <div class="order-card-compact">
+                            <div class="order-card-top">
+                                <div class="order-title-meta">
+                                    <span class="platform-chip chip-tiktok">TikTok Shop</span>
+                                    <span>#TK-98214 • Oversized T-Shirt Black (Size L)</span>
+                                </div>
+                                <span class="net-profit-badge">Net Profit: +89.100 ₫ (47.1%)</span>
+                            </div>
+                            <div class="waterfall-step-grid">
+                                <div class="waterfall-step-item">
+                                    <span class="waterfall-step-label">Customer Paid</span>
+                                    <span class="waterfall-step-val">189.000 ₫</span>
+                                </div>
+                                <div class="waterfall-step-item">
+                                    <span class="waterfall-step-label">Platform Fee (10%)</span>
+                                    <span class="waterfall-step-val text-deduct">-18.900 ₫</span>
+                                </div>
+                                <div class="waterfall-step-item">
+                                    <span class="waterfall-step-label">Packaging Bag</span>
+                                    <span class="waterfall-step-val text-deduct">-3.000 ₫</span>
+                                </div>
+                                <div class="waterfall-step-item">
+                                    <span class="waterfall-step-label">Landed COGS</span>
+                                    <span class="waterfall-step-val text-cogs">-78.000 ₫</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order 2: Shopee -->
+                        <div class="order-card-compact">
+                            <div class="order-card-top">
+                                <div class="order-title-meta">
+                                    <span class="platform-chip chip-shopee">Shopee</span>
+                                    <span>#SP-44219 • Oversized T-Shirt Black (Size M)</span>
+                                </div>
+                                <span class="net-profit-badge">Net Profit: +89.100 ₫ (47.1%)</span>
+                            </div>
+                            <div class="waterfall-step-grid">
+                                <div class="waterfall-step-item">
+                                    <span class="waterfall-step-label">Customer Paid</span>
+                                    <span class="waterfall-step-val">189.000 ₫</span>
+                                </div>
+                                <div class="waterfall-step-item">
+                                    <span class="waterfall-step-label">Platform Fee (10%)</span>
+                                    <span class="waterfall-step-val text-deduct">-18.900 ₫</span>
+                                </div>
+                                <div class="waterfall-step-item">
+                                    <span class="waterfall-step-label">Packaging Bag</span>
+                                    <span class="waterfall-step-val text-deduct">-3.000 ₫</span>
+                                </div>
+                                <div class="waterfall-step-item">
+                                    <span class="waterfall-step-label">Landed COGS</span>
+                                    <span class="waterfall-step-val text-cogs">-78.000 ₫</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order 3: Facebook POS -->
+                        <div class="order-card-compact">
+                            <div class="order-card-top">
+                                <div class="order-title-meta">
+                                    <span class="platform-chip chip-facebook">Facebook POS</span>
+                                    <span>#FB-31005 • Combo 2 Oversized Tees (M+L)</span>
+                                </div>
+                                <span class="net-profit-badge">Net Profit: +163.000 ₫ (46.7%)</span>
+                            </div>
+                            <div class="waterfall-step-grid">
+                                <div class="waterfall-step-item">
+                                    <span class="waterfall-step-label">Customer Paid</span>
+                                    <span class="waterfall-step-val">349.000 ₫</span>
+                                </div>
+                                <div class="waterfall-step-item">
+                                    <span class="waterfall-step-label">Ad Spend / Msg Fee</span>
+                                    <span class="waterfall-step-val text-deduct">-25.000 ₫</span>
+                                </div>
+                                <div class="waterfall-step-item">
+                                    <span class="waterfall-step-label">Box & Packaging</span>
+                                    <span class="waterfall-step-val text-deduct">-5.000 ₫</span>
+                                </div>
+                                <div class="waterfall-step-item">
+                                    <span class="waterfall-step-label">2x Landed COGS</span>
+                                    <span class="waterfall-step-val text-cogs">-156.000 ₫</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- =================================================================== -->
+        <!-- TAB 2: INBOUND LANDED COST ENGINE (landcost.png)                    -->
+        <!-- =================================================================== -->
+        <main class="tab-pane" id="tab-landed-cost">
+            <!-- Breadcrumbs and Action Header -->
+            <div class="breadcrumb-bar">
+                <span>Warehouse Management</span> / <span>Inbound POs</span> / <span class="active">PO-2026-NINH-HIEP-01</span>
+            </div>
+
+            <div class="page-title-row">
+                <div class="page-title-group" style="display:flex; align-items:center; gap:12px;">
+                    <h2>Inbound PO Receipt & Landed Cost Allocation (PO-2026-NINH-HIEP-01)</h2>
+                    <span class="kpi-badge badge-gray">DRAFTING PO</span>
+                </div>
+                <div class="header-action-group">
+                    <button class="btn-secondary" onclick="showToast('Loading Inbound PO History archive...')">
+                        Inbound PO History
+                    </button>
+                    <button class="btn-secondary" onclick="showToast('Synchronizing ledger entries to MISA / ERP...')">
+                        Sync to ERP / Accounting
+                    </button>
+                </div>
+            </div>
+
+            <!-- Top 2-Column Section -->
+            <div class="two-col-layout">
+                <!-- Left Card: Batch Parameters -->
+                <section class="card-box">
+                    <div class="card-box-header">
+                        <span class="kpi-card-title">BATCH PARAMETERS</span>
+                        <span class="formula-header" style="margin:0;">Unit: VND</span>
+                    </div>
+
+                    <div class="form-field-group">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                            <label class="form-label" for="po-supplier-select" style="margin:0;">Supplier / Garment Factory</label>
+                            <span class="kpi-badge badge-green">[Reconciled]</span>
+                        </div>
+                        <select class="form-select" id="po-supplier-select">
+                            <option value="2">Ninh Hiep Central Warehouse (Hanoi)</option>
+                            <option value="1">Tan Binh Garment Factory (TP.HCM)</option>
+                        </select>
+                        <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); margin-top:4px;">
+                            <span>Tel: 0988.345.892</span>
+                            <span>Textile Industrial Cluster, Gia Lam</span>
+                        </div>
+                    </div>
+
+                    <div class="form-field-group">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                            <label class="form-label" for="po-freight-input" style="margin:0;">Truck Inbound Freight</label>
+                            <span style="font-size:11px; color:var(--text-muted);">Fixed per trip</span>
+                        </div>
+                        <input type="number" class="form-input" id="po-freight-input" value="1300000" step="50000" oninput="calculateAdvancedLandedCost()">
+                    </div>
+
+                    <div class="form-field-group">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                            <label class="form-label" for="po-handling-input" style="margin:0;">Handling & Unloading Fee</label>
+                            <span style="font-size:11px; color:var(--text-muted);">At dock</span>
+                        </div>
+                        <input type="number" class="form-input" id="po-handling-input" value="650000" step="50000" oninput="calculateAdvancedLandedCost()">
+                    </div>
+
+                    <div class="form-field-group">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                            <label class="form-label" for="po-pkg-input" style="margin:0;">Polybag, Zip Bag & Tag Fee</label>
+                            <span style="font-size:11px; color:var(--text-muted);">Factory standard</span>
+                        </div>
+                        <input type="number" class="form-input" id="po-pkg-input" value="1000" step="100" oninput="calculateAdvancedLandedCost()">
+                    </div>
+
+                    <div style="background:var(--bg-subtle); border-radius:var(--radius-sm); padding:10px 14px; display:flex; justify-content:space-between; align-items:center; margin-top:auto;">
+                        <span style="font-size:12px; font-weight:700; color:var(--text-secondary); text-transform:uppercase;">TOTAL BATCH QUANTITY</span>
+                        <span style="font-size:16px; font-weight:800; color:var(--text-main);"><span id="po-total-qty-badge">650</span> pcs</span>
+                    </div>
+                </section>
+
+                <!-- Right Card: Real-time Allocation Preview -->
+                <section class="card-box">
+                    <div class="card-box-header">
+                        <div>
+                            <h3 class="card-box-title">REAL-TIME ALLOCATION PREVIEW</h3>
+                            <p class="card-box-sub">Direct unit landed cost allocation engine (Unit Landed Engine)</p>
+                        </div>
+                        <span class="kpi-badge badge-green">100% Exact</span>
+                    </div>
+
+                    <!-- Split Calculation Cards -->
+                    <div class="split-calc-grid">
+                        <div class="split-calc-card">
+                            <div class="split-calc-title">1. Truck Freight Allocation</div>
+                            <div class="split-calc-math" id="split-freight-math">1.300.000 ₫ ÷ 650 pcs</div>
+                            <div class="split-calc-result" id="split-freight-res">+2.000 ₫ / pc</div>
+                        </div>
+                        <div class="split-calc-card">
+                            <div class="split-calc-title">2. Handling & Unloading Allocation</div>
+                            <div class="split-calc-math" id="split-handling-math">650.000 ₫ ÷ 650 pcs</div>
+                            <div class="split-calc-result" id="split-handling-res">+1.000 ₫ / pc</div>
+                        </div>
+                    </div>
+
+                    <!-- Landed Cost Spotlight -->
+                    <div class="landed-spotlight-box">
+                        <div class="spotlight-sub">ESTIMATED LANDED COST (STANDARD SKU)</div>
+                        <div class="spotlight-main-price" id="adv-spotlight-price">
+                            78.000 <span>₫ / pc</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--text-muted);">Completely eliminates hidden margin erosion when multi-channel selling.</p>
+
+                        <div class="spotlight-breakdown-list">
+                            <div>
+                                <span>+ Wholesale Price:</span>
+                                <strong id="adv-breakdown-wholesale">75.000 ₫</strong>
+                            </div>
+                            <div>
+                                <span>+ Truck Freight:</span>
+                                <strong id="adv-breakdown-freight">2.000 ₫</strong>
+                            </div>
+                            <div>
+                                <span>+ Zip Bag & Tag:</span>
+                                <strong id="adv-breakdown-pkg">1.000 ₫</strong>
+                            </div>
+                            <div style="font-weight:800; border-top:1px solid var(--border-color); padding-top:4px; margin-top:4px;">
+                                <span>Total Landed Cost:</span>
+                                <strong style="color:var(--primary-blue);" id="adv-breakdown-total">78.000 ₫</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cost Structure Stacked Bar -->
+                    <div>
+                        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:700; color:var(--text-muted);">
+                            <span>Actual Cost Composition</span>
+                            <span>100% Total Cost</span>
+                        </div>
+                        <div class="breakdown-stacked-bar">
+                            <div class="bar-wholesale" style="width: 96.1%;"></div>
+                            <div class="bar-freight" style="width: 2.6%;"></div>
+                            <div class="bar-pkg" style="width: 1.3%;"></div>
+                        </div>
+                        <div class="breakdown-legend-row">
+                            <span>• Wholesale: <strong>96.1%</strong></span>
+                            <span>• Freight: <strong>2.6%</strong></span>
+                            <span>• Packaging: <strong>1.3%</strong></span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- SKU Table Section -->
+            <section class="card-box" style="margin-bottom:20px;">
+                <div class="table-filter-toolbar">
+                    <div class="search-input-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="adv-sku-search" placeholder="Search SKU, product name..." oninput="filterSkuTable()">
+                    </div>
+                    <div class="filter-pills-row" id="sku-size-pills-container">
+                        <button class="filter-pill-btn active" onclick="filterSizePill('ALL')">All</button>
+                        <button class="filter-pill-btn" onclick="filterSizePill('M')">Size M</button>
+                        <button class="filter-pill-btn" onclick="filterSizePill('L')">Size L</button>
+                        <button class="filter-pill-btn" onclick="filterSizePill('XL')">Size XL</button>
+                        <button class="filter-pill-btn" onclick="filterSizePill('FREE')">Free Size</button>
+                    </div>
+                    <button class="btn-primary-dark" style="width:auto; padding:8px 16px; font-size:12px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;" onclick="openAddSkuModal()">
+                        <span>➕</span> Add New SKU to Batch
+                    </button>
+                    <div style="font-size:12px; color:var(--text-muted);">
+                        Showing <strong id="sku-count-text">4 / 4</strong> SKUs in inbound PO
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="clean-table" id="adv-inbound-table">
+                        <thead>
+                            <tr>
+                                <th>SKU CODE</th>
+                                <th>PRODUCT NAME</th>
+                                <th>VARIANT / SIZE</th>
+                                <th>QUANTITY</th>
+                                <th>WHOLESALE (₫)</th>
+                                <th>ALLOCATED FREIGHT</th>
+                                <th>PACKAGING FEE</th>
+                                <th>UNIT LANDED COST</th>
+                                <th>PROJECTED STOCK</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adv-sku-tbody">
+                            <!-- Populated dynamically by app.js -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Table Summary Bar -->
+                <div class="table-summary-bar">
+                    <span>Avg. Freight: <strong id="summary-avg-freight">2.000 ₫/pc</strong></span>
+                    <span>Total Wholesale Value: <strong id="summary-wholesale-val">47.070.000 ₫</strong></span>
+                    <span>Total Incurred Fees: <strong id="summary-fees-val">2.600.000 ₫</strong></span>
+                    <span>TOTAL LANDED INBOUND VALUE: <strong style="color:var(--primary-blue);" id="summary-total-val">49.670.000 ₫</strong></span>
+                </div>
+
+                <!-- Bottom Action Row -->
+                <div class="bottom-action-bar">
+                    <div class="bottom-action-left">
+                        <button class="btn-secondary" onclick="showToast('Draft cancelled')">Cancel</button>
+                        <button class="btn-secondary" onclick="showToast('PO Draft saved to local state')">Save Draft</button>
+                        <button class="btn-secondary" onclick="showToast('Printing 650 Barcode/QR Labels...')">Print Barcode / QR Labels</button>
+                    </div>
+                    <div class="bottom-action-right">
+                        <div class="total-inbound-val-text">
+                            TOTAL NET INBOUND COST: <strong id="footer-total-inbound">49.670.000 ₫</strong>
+                        </div>
+                        <button class="btn-primary-dark" style="width:auto; padding:10px 24px;" onclick="confirmInboundPO()">
+                            Confirm Inbound Receipt & Stock In
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- =================================================================== -->
+        <!-- TAB 3: ORDER NET PROFIT & RETURNS (product_net__profit.png)          -->
+        <!-- =================================================================== -->
+        <main class="tab-pane" id="tab-net-profit">
+            <div class="page-title-row">
+                <div class="page-title-group">
+                    <div style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">
+                        UNIT PROFIT AUDIT PER ORDER
+                    </div>
+                    <h2>Order Net Profit Waterfall Ledger</h2>
+                    <p>Waterfall ledger dissecting revenue, platform commission, landed cost and packaging per order in real-time.</p>
+                </div>
+                <div class="profit-top-stats">
+                    <div class="stat-pill-box">
+                        <div class="stat-pill-label">Average Net Margin</div>
+                        <div class="stat-pill-val">45.2%</div>
+                        <div class="stat-pill-sub">+3.4% vs last period</div>
+                    </div>
+                    <div class="stat-pill-box">
+                        <div class="stat-pill-label">Fulfilled Orders</div>
+                        <div class="stat-pill-val">2,450 <span style="font-size:13px; font-weight:600; color:var(--text-muted);">orders</span></div>
+                        <div style="font-size:11px; color:var(--success-green); font-weight:600;">+12.5% volume growth</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter and Reconciliation Toolbar -->
+            <section class="card-box" style="margin-bottom:20px;">
+                <div class="channel-filter-tabs-row">
+                    <div class="channel-pill-group">
+                        <button class="filter-pill-btn active" onclick="filterOrderPlatform('ALL')">All Channels (2,450 orders)</button>
+                        <button class="filter-pill-btn" onclick="filterOrderPlatform('TIKTOK')">TikTok Shop (890 orders)</button>
+                        <button class="filter-pill-btn" onclick="filterOrderPlatform('SHOPEE')">Shopee (1,240 orders)</button>
+                        <button class="filter-pill-btn" onclick="filterOrderPlatform('FACEBOOK')">Facebook POS (320 orders)</button>
+                    </div>
+                    <div class="reconciliation-cycle-select">
+                        <span>Reconciliation Cycle:</span>
+                        <button class="filter-pill-btn">This Month (01/10 - 31/10)</button>
+                    </div>
+                </div>
+
+                <div class="table-filter-toolbar">
+                    <div class="search-input-wrapper" style="width:320px;">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="order-search-input" placeholder="Search by order ID, SKU, product name..." oninput="filterOrdersByQuery()">
+                    </div>
+                    <div class="filter-pills-row">
+                        <span style="font-size:12px; font-weight:600; color:var(--text-muted); align-self:center; margin-right:4px;">PROFIT STATUS:</span>
+                        <button class="filter-pill-btn active" onclick="filterMarginStatus('ALL')">High Margin &gt;40% (1,890)</button>
+                        <button class="filter-pill-btn" onclick="filterMarginStatus('LOW')">Low Margin &lt;20% (410)</button>
+                        <button class="filter-pill-btn" onclick="filterMarginStatus('LOSS')">Loss-making Orders (18)</button>
+                    </div>
+                </div>
+
+                <!-- Waterfall Ledger Table -->
+                <div style="margin-bottom:8px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h4 style="font-size:14px; font-weight:800; color:var(--text-main);">Order Net Profit Waterfall (Waterfall Ledger)</h4>
+                        <span style="font-size:11px; color:var(--text-muted);">Unit: VND (₫)</span>
+                    </div>
+                    <p style="font-size:11px; color:var(--text-muted);">Step-by-step deduction: Net Revenue - Platform Fee - Landed COGS - Packaging = True Net Profit</p>
+                </div>
+
+                <div class="table-container">
+                    <table class="clean-table waterfall-table-full">
+                        <thead>
+                            <tr>
+                                <th>ORDER ID</th>
+                                <th>PRODUCT & SKU</th>
+                                <th>NET REVENUE</th>
+                                <th>PLATFORM & VOUCHER FEE</th>
+                                <th>INBOUND LANDED COGS</th>
+                                <th>PACKAGING SUPPLIES</th>
+                                <th>NET PROFIT IN POCKET</th>
+                            </tr>
+                        </thead>
+                        <tbody id="net-profit-ledger-tbody">
+                            <!-- Populated dynamically by app.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <!-- =================================================================== -->
+        <!-- APP FOOTER                                                          -->
+        <!-- =================================================================== -->
+        <footer class="app-footer">
+            <div>© 2026 FashionRev-Ops Financial Control Terminal • Multi-channel P&L Accounting System</div>
+            <div>
+                <span class="pulse-dot"></span> System operational (99.98%) • Currency: VND (₫)
+            </div>
+        </footer>
+    </div>
+
+        <!-- =================================================================== -->
+        <!-- ADD NEW SKU MODAL DIALOG                                            -->
+        <!-- =================================================================== -->
+        <div id="add-sku-modal" class="modal-backdrop">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <div>
+                        <h3 class="modal-title">Add New SKU / Garment Model</h3>
+                        <p class="modal-sub">Add a new fashion variant to this inbound batch with dynamic Landed Cost allocation</p>
+                    </div>
+                    <button class="modal-close-btn" onclick="closeAddSkuModal()" type="button">&times;</button>
+                </div>
+                <form id="add-sku-form" onsubmit="event.preventDefault(); submitNewSku();">
+                    <div class="modal-body">
+                        <div class="form-row-2col">
+                            <div class="form-field-group">
+                                <label class="form-label" for="new-sku-code">SKU Code <span style="color:var(--danger-red);">*</span></label>
+                                <input type="text" id="new-sku-code" class="form-input" placeholder="e.g. AT-BEG-M, VAY-HOA-L" required>
+                            </div>
+                            <div class="form-field-group">
+                                <label class="form-label" for="new-sku-size">Variant / Size <span style="color:var(--danger-red);">*</span></label>
+                                <select id="new-sku-size" class="form-select" required>
+                                    <option value="Size S">Size S</option>
+                                    <option value="Size M" selected>Size M</option>
+                                    <option value="Size L">Size L</option>
+                                    <option value="Size XL">Size XL</option>
+                                    <option value="Size 2XL">Size 2XL</option>
+                                    <option value="Free Size">Free Size</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-field-group">
+                            <label class="form-label" for="new-sku-name">Product Name <span style="color:var(--danger-red);">*</span></label>
+                            <input type="text" id="new-sku-name" class="form-input" placeholder="e.g. Unisex Sand Beige Tee, Premium Silk Blazer" required>
+                        </div>
+
+                        <div class="form-field-group">
+                            <label class="form-label" for="new-sku-sub">Fabric / Material Details</label>
+                            <input type="text" id="new-sku-sub" class="form-input" placeholder="e.g. Cotton Compact 280gsm, 4-Way Stretch Soft Fabric">
+                        </div>
+
+                        <div class="form-row-2col">
+                            <div class="form-field-group">
+                                <label class="form-label" for="new-sku-qty">Inbound Quantity (pcs) <span style="color:var(--danger-red);">*</span></label>
+                                <input type="number" id="new-sku-qty" class="form-input" value="100" min="1" required oninput="previewModalLandedCost()">
+                            </div>
+                            <div class="form-field-group">
+                                <label class="form-label" for="new-sku-wholesale">Wholesale Unit Price (₫) <span style="color:var(--danger-red);">*</span></label>
+                                <input type="number" id="new-sku-wholesale" class="form-input" value="75000" step="1000" min="0" required oninput="previewModalLandedCost()">
+                            </div>
+                        </div>
+
+                        <div class="form-row-2col">
+                            <div class="form-field-group">
+                                <label class="form-label" for="new-sku-stock-before">Initial Stock (pcs)</label>
+                                <input type="number" id="new-sku-stock-before" class="form-input" value="0" min="0">
+                            </div>
+                            <div class="form-field-group">
+                                <label class="form-label">Projected Unit Landed Cost</label>
+                                <div id="modal-projected-landed" style="font-size:15px; font-weight:800; color:var(--primary-blue); padding:8px 0;">
+                                    ~78.000 ₫ / pc
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-secondary" onclick="closeAddSkuModal()">Cancel</button>
+                        <button type="submit" class="btn-primary-dark" style="width:auto; padding:10px 22px;">+ Add to Inbound Batch</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast" class="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

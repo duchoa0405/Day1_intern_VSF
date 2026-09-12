@@ -1,0 +1,101 @@
+// ==============================================================================
+// SƠ ĐỒ DATABASE HỆ THỐNG QUẢN LÝ DÒNG TIỀN & LỢI NHUẬN SHOP THỜI TRANG
+// FashionRev-Ops: Financial Control & Landed Cost Engine Database Schema (DBML)
+// Công cụ trực quan hóa: Dán toàn bộ mã này vào https://dbdiagram.io/
+// ==============================================================================
+
+Table categories {
+  id integer [pk, increment]
+  name varchar(100) [unique, not null, note: 'Tên danh mục (Áo thun, Váy, Quần)']
+  code varchar(50) [unique, not null, note: 'Mã danh mục, vd: CAT-TOP']
+  description text
+  created_at timestamp [default: `now()`]
+}
+
+Table suppliers {
+  id integer [pk, increment]
+  name varchar(255) [not null, note: 'Tên xưởng may / Nhà cung cấp sỉ']
+  contact_person varchar(100)
+  phone varchar(50)
+  address text
+  created_at timestamp [default: `now()`]
+}
+
+Table products {
+  id integer [pk, increment]
+  category_id integer [not null, ref: > categories.id]
+  product_code varchar(50) [unique, not null, note: 'Mã sản phẩm cha, vd: PROD-AT-OVS']
+  name varchar(255) [not null, note: 'Tên sản phẩm thời trang']
+  material varchar(100) [note: 'Chất liệu vải: Cotton 250gsm, Kaki, Voan']
+  description text
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table product_variants {
+  id integer [pk, increment]
+  product_id integer [not null, ref: > products.id]
+  sku varchar(100) [unique, not null, note: 'Mã định danh SKU (VD: AT-BLK-M)']
+  color varchar(50) [not null, note: 'Màu sắc: Đen, Trắng, Be']
+  size varchar(20) [not null, note: 'Kích cỡ: Size S, M, L, XL, Free Size']
+  barcode varchar(100) [unique, not null, note: 'Mã vạch dán trên túi zip']
+  base_price decimal(15, 2) [not null, default: 0.00, note: 'Giá bán niêm yết']
+  current_stock integer [not null, default: 0, note: 'Tồn kho khả dụng thực tế']
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table purchase_orders {
+  id integer [pk, increment]
+  po_code varchar(50) [unique, not null, note: 'Mã phiếu nhập hàng (VD: PO-20260901-01)']
+  supplier_id integer [not null, ref: > suppliers.id]
+  total_merchandise_cost decimal(15, 2) [not null, default: 0.00, note: 'Tổng tiền mua hàng sỉ']
+  shipping_fee decimal(15, 2) [not null, default: 0.00, note: 'Cước xe tải chở hàng nguyên kiện']
+  other_fees decimal(15, 2) [not null, default: 0.00, note: 'Phí bốc xếp kiểm đếm đầu bao']
+  total_quantity integer [not null, default: 0, note: 'Tổng sản lượng chiếc trong lô']
+  status varchar(30) [not null, default: 'RECEIVED', note: 'DRAFT | RECEIVED | CANCELLED']
+  inbound_date timestamp [default: `now()`]
+  notes text
+  created_at timestamp [default: `now()`]
+}
+
+Table purchase_order_items {
+  id integer [pk, increment]
+  po_id integer [not null, ref: > purchase_orders.id]
+  variant_id integer [not null, ref: > product_variants.id]
+  quantity integer [not null, note: 'Số lượng chiếc của SKU trong lô']
+  unit_cost decimal(15, 2) [not null, note: 'Giá mua sỉ gốc trên hóa đơn']
+  allocated_freight decimal(15, 2) [not null, default: 0.00, note: 'Cước xe phân bổ = (Cước xe + Phụ phí) / Tổng Qty']
+  packaging_cost decimal(15, 2) [not null, default: 1000.00, note: 'Phí túi zip + tem barcode']
+  landed_cost decimal(15, 2) [not null, note: 'Giá vốn cập kho = Giá sỉ + Cước bổ đầu + Túi zip']
+  created_at timestamp [default: `now()`]
+}
+
+Table orders {
+  id integer [pk, increment]
+  order_sn varchar(100) [unique, not null, note: 'Mã đơn từ sàn (TikTok, Shopee, FB)']
+  platform varchar(50) [not null, note: 'TIKTOK | SHOPEE | FACEBOOK']
+  gross_sales decimal(15, 2) [not null, note: 'Tổng tiền khách hàng thanh toán']
+  platform_fee decimal(15, 2) [not null, default: 0.00, note: 'Hoa hồng sàn & phí cố định']
+  voucher_sponsor decimal(15, 2) [not null, default: 0.00, note: 'Voucher shop đồng tài trợ']
+  shipping_fee_shop decimal(15, 2) [not null, default: 0.00, note: 'Phí ship shop chịu']
+  net_settlement_amount decimal(15, 2) [not null, default: 0.00, note: 'Tiền sàn thực tế trả về ví shop']
+  order_status varchar(50) [not null, default: 'DELIVERED', note: 'PENDING | DELIVERED | RETURNED']
+  return_condition varchar(50) [not null, default: 'NONE', note: 'NONE | INTACT | DAMAGED']
+  return_loss_cost decimal(15, 2) [not null, default: 0.00, note: 'Thiệt hại hàng hoàn: cước 2 chiều hoặc mất đứt 100% vốn']
+  order_date timestamp [not null]
+  settlement_date timestamp
+  created_at timestamp [default: `now()`]
+}
+
+Table order_items {
+  id integer [pk, increment]
+  order_id integer [not null, ref: > orders.id]
+  variant_id integer [not null, ref: > product_variants.id]
+  quantity integer [not null, default: 1]
+  selling_price decimal(15, 2) [not null, note: 'Giá bán cho khách']
+  applied_landed_cogs decimal(15, 2) [not null, note: 'Snapshot giá vốn cập kho đóng băng tại thời điểm xuất kho']
+  packaging_expense decimal(15, 2) [not null, default: 3000.00, note: 'Hộp carton + túi niêm phong đóng gói']
+  net_margin decimal(15, 2) [not null, default: 0.00, note: 'Lãi ròng thực nhận của sản phẩm này']
+  created_at timestamp [default: `now()`]
+}

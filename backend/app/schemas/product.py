@@ -21,6 +21,17 @@ class ProductVariantBase(BaseModel):
     current_stock: int
 
 
+class ProductVariantCreate(BaseModel):
+    product_name: str
+    sku: str
+    color: Optional[str] = "Standard"
+    size: str
+    barcode: Optional[str] = None
+    base_price: Optional[Decimal] = Decimal("189000.00")
+    material: Optional[str] = None
+    initial_stock: Optional[int] = 0
+
+
 class ProductVariantResponse(ProductVariantBase):
     model_config = ConfigDict(from_attributes=True)
 

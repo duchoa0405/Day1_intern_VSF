@@ -4,7 +4,10 @@ from typing import Optional, List
 from datetime import datetime
 
 class PurchaseOrderItemCreate(BaseModel):
-    variant_id: int
+    variant_id: Optional[int] = None
+    sku: Optional[str] = None
+    product_name: Optional[str] = None
+    size: Optional[str] = None
     quantity: int = Field(..., gt=0, description="Số lượng chiếc nhập")
     unit_cost: Decimal = Field(..., ge=0, description="Giá mua sỉ 1 chiếc từ xưởng")
     packaging_cost: Decimal = Field(default=Decimal("1000.00"), ge=0, description="Phí túi zip + tem barcode riêng")

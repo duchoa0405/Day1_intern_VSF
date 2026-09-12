@@ -1,184 +1,256 @@
-#  FashionRev-Ops: Hệ Thống Quản Lý Doanh Thu & Lợi Nhuận Thực Tế (Shop Thời Trang Online)
+# 👗 FashionRev-Ops: Hệ Thống Quản Lý Doanh Thu & Lợi Nhuận Thực Tế (Shop Thời Trang Online)
 
-> **Giải pháp chuyển đổi số và quản trị tài chính - dòng tiền chuyên sâu dành cho mô hình kinh doanh quần áo may sẵn / nhập hàng sẵn (Fast-Fashion E-commerce).**
-
----
-
-##  1. Bối Cảnh & Bài Toán Kinh Doanh Thực Tế (Business Context & Pain Points)
-
-Kinh doanh thời trang online theo mô hình **nhập hàng may sẵn** có tốc độ xoay vòng vốn cực nhanh nhưng cũng tiềm ẩn rủi ro thất thoát biên lợi nhuận cao nhất trong ngành E-commerce bởi các đặc thù:
-
-1. **Vòng đời sản phẩm ngắn (Hot Trend Lifecycle):** Một mẫu váy/áo thường chỉ "hot" trong 2–4 tuần. Nếu không nắm bắt chính xác tốc độ bán theo từng biến thể (Size/Màu/Form) và biên lãi ròng thực tế, lợi nhuận của đợt bán trước sẽ bị "chôn vùi" hoàn toàn vào tiền nhập hàng tồn đọng/hàng ế của đợt sau (*Bẫy "Doanh thu ảo - Tiền mặt âm"*).
-2. **Giá vốn biến động liên tục (Dynamic Landed Cost):** Không có giá vốn cố định. Cùng 1 mẫu áo, đợt 1 nhập giá sỉ khác, đợt 2 nhập bổ sung cước xe/cân nặng tăng hoặc tỷ giá thay đổi. Cước kiện và chi phí phụ luôn thay đổi theo từng đợt nhập.
-3. **Chi phí ẩn và hàng hoàn (Returns & Hidden Leakage):** Tỷ lệ hoàn ngành thời trang dao động 15% - 30%. Tổn thất không chỉ là cước ship 2 chiều mà còn là túi bọc hỏng, tem mác rách, chi phí ủi/xử lý lại, thậm chí mất trắng 100% giá vốn nếu hàng bị bẩn/rách/tráo.
-4. **Phí sàn trừ ngầm (Platform Fee Creep):** Phí cố định, phí thanh toán, phí freeship extra, phạt vượt cân nặng thực tế... trên TikTok Shop / Shopee / Lazada thường làm thất thoát 3% – 7% doanh thu nếu không đối soát từng đơn.
+> **Giải pháp chuyển đổi số và quản trị tài chính - dòng tiền chuyên sâu dành cho mô hình kinh doanh quần áo may sẵn / nhập hàng sẵn (Fast-Fashion E-commerce).**  
+> **Kiến trúc hệ thống:** Xây dựng xoay quanh **3 Tính Năng Cốt Lõi** bám sát quy trình vận hành và đối soát thực tế.
 
 ---
 
-##  2. Trụ Cột Cốt Lõi Của Hệ Thống (Core System Pillars)
+## 📌 1. Bối Cảnh & Bài Toán Kinh Doanh Cốt Lõi (Top-Down & Core Pain Points)
+
+Kinh doanh thời trang online theo mô hình **nhập hàng may sẵn** có tốc độ xoay vòng vốn cực nhanh nhưng cũng tiềm ẩn rủi ro thất thoát biên lợi nhuận cao nhất trong ngành E-commerce:
+
+1. **Vòng đời sản phẩm ngắn (Hot Trend 2–4 tuần):** Không có giá vốn chuẩn xác và không đo lường được lãi ròng theo từng biến thể (Size/Màu), lợi nhuận của đợt bán trước sẽ bị chôn vùi vào tiền nhập hàng tồn đọng (*Bẫy "Doanh thu ảo - Tiền mặt âm"*).
+2. **Giá vốn biến động liên tục (Dynamic Landed Cost):** Cùng 1 mẫu áo, đợt 1 nhập giá sỉ khác, đợt 2 nhập bổ sung cước xe tải tăng. Nếu lấy giá sỉ hóa đơn làm giá vốn sẽ bị "ăn mòn" 3.000đ – 5.000đ tiền cước trên mỗi sản phẩm.
+3. **Phí sàn trừ ngầm (Platform Fee Creep):** Hoa hồng sàn (9%–12%), voucher tài trợ, phụ phí đóng gói ăn mòn phần lớn lợi nhuận khiến shop lầm tưởng bán được nhiều là có lãi nếu không kiểm soát ở cấp độ đơn vị sản phẩm.
 
 ```mermaid
 flowchart TD
-    A[Nhà Cung Cấp / Xưởng May] -->|1. PO + Cước kiện| B(Hệ Thống Phân Bổ Landed Cost)
-    B -->|2. Nhập Kho & Dán Barcode SKU| C[Kho Hàng / Tồn Kho Đa Biến Thể]
-    C -->|3. Đóng Đơn & Snapshot COGS| D[Kênh Bán Sàn: TikTok/Shopee/FB]
-    D -->|4. Giao Thành Công| E[Đối Soát Dòng Tiền & Ví Sàn]
-    D -->|4. Khách Hoàn Hàng| F[Phân Loại Hàng Hoàn & Hạch Toán Hao Hụt]
-    E --> G[Báo Cáo P&L Lãi Ròng Thực Tế]
-    F --> G
+    A[Nhà Cung Cấp / Xưởng May] -->|1. PO + Cước xe tải| B(Hệ Thống Phân Bổ Landed Cost)
+    B -->|2. Thêm Mẫu Mới & Nhập Kho| C[Kho Hàng / Tồn Kho Đa Biến Thể]
+    C -->|3. Đóng Đơn & Snapshot COGS| D[Kênh Bán: TikTok / Shopee / FB]
+    D -->|4. Đối Soát Đơn Hàng| E[Thác Nước Lợi Nhuận Ròng]
+    E --> G[Executive Financial Dashboard]
 ```
 
-### 🔹 1. Tự Động Tính Giá Vốn Cập Kho (Landed Cost Engine)
-Phân bổ tự động và chính xác mọi chi phí phát sinh khi hàng về kho:
-$$\text{Landed Cost}_{\text{SKU}} = \text{Giá Mua Sỉ} + \frac{\text{Tổng Cước Vận Chuyển Kiện} + \text{Phí Kiểm Đếm/Tỷ Giá}}{\text{Tổng Số Lượng Nhập}} + \text{Chi Phí Tem/Túi Zip}$$
+---
 
-### 🔹 2. Trừ Giá Vốn Xuất Kho Chính Xác (FIFO & COGS Snapshot)
-Áp dụng nguyên tắc **Nhập trước - Xuất trước (FIFO)** theo từng lô nhập:
-- *Ví dụ:* Lô 1 nhập 100 áo giá 90.000đ; Lô 2 nhập 200 áo giá 105.000đ (do khan hàng). 
-- Khi phát sinh đơn bán, hệ thống trừ đúng giá vốn theo lô tương ứng và **"đóng băng" (COGS Snapshot)** vào đơn hàng tại thời điểm xuất để bảo toàn tính toàn vẹn dữ liệu tài chính lịch sử.
+## 🚀 2. Ba Tính Năng Cốt Lõi (Core Functional Engines - MVP Scope)
 
-### 🔹 3. Xử Lý & Hạch Toán Tổn Thất Hàng Hoàn (Return Loss Accounting)
-Khi bưu tá trả kiện hàng hoàn về kho, hệ thống phân loại tài chính theo 2 luồng:
-- **Hàng nguyên vẹn:** Nhập lại kho bán tiếp $\rightarrow$ Ghi nhận chi phí mất đi = `Cước vận chuyển 2 chiều` + `Phí bao bì/túi zip hư hao` + `Chi phí nhân công đóng/kiểm`.
-- **Hàng rách / dơ / bị tráo (Hàng lỗi):** Chuyển sang kho xả lỗi $\rightarrow$ Ghi nhận **mất đứt 100% giá vốn món đồ** vào chi phí hao hụt kỳ đó.
+Hệ thống được thiết kế top-down tập trung giải quyết triệt để **3 Tính Năng Cốt Lõi** xoay quanh bài toán giá vốn và lợi nhuận thực tế:
 
-### 🔹 4. Khớp Lệnh Dòng Tiền Sàn & Bóc Trần Phí Ẩn (Settlement & Reconciliation)
-So khớp 1:1 giữa mã đơn sàn, tiền thực nhận về tài khoản ngân hàng và sao kê ví sàn nhằm phát hiện tức thì các sai lệch: trừ sai cân nặng kiện hàng, phạt SLA, sai chính sách voucher tài trợ.
+```
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│                   FASHIONREV-OPS: 3 TÍNH NĂNG CỐT LÕI (MVP)                     │
+├───────────────────────────────┬──────────────────────────────────────────────────┤
+│ 1. Inbound Landed Cost Engine │ 2. Dynamic Inbound SKU Management                │
+│    • Phân bổ tự động cước xe  │    • Thêm mẫu mới/size mới vào lô động           │
+│    • Công thức tính chuẩn xác │    • Xem trước giá vốn dự kiến trên Modal        │
+│    • Tiêu điểm Landed Cost    │    • Tự động chia lại cước cho toàn bộ lô        │
+├───────────────────────────────┴──────────────────────────────────────────────────┤
+│ 3. Order Net Profit Waterfall Ledger (Đa Kênh TMĐT)                              │
+│    • Bóc tách 5 bước dòng tiền: Khách trả -> Phí sàn -> Landed COGS -> Bao bì    │
+│    • Phân tích biên lợi nhuận ròng đút túi (Net Margin %)                        │
+│    • Bộ lọc thông minh: TikTok Shop, Shopee, Facebook POS                        │
+└──────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 🔹 Tính Năng 1: Phân Bổ Giá Vốn Cập Kho Tự Động (Inbound Landed Cost Engine)
+* **Bài toán giải quyết:** Tự động chia đều chi phí cước xe tải và phụ phí bốc dỡ vào từng chiếc áo nhập kho.
+* **Công thức toán học minh bạch:**
+  $$\text{Landed Cost}_{\text{SKU}} = \text{Giá Mua Sỉ} + \frac{\text{Cước Xe Tải} + \text{Phí Bốc Dỡ}}{\text{Tổng Số Lượng Chiếc Nhập}} + \text{Phí Túi Zip \& Tem}$$
+* **Trực quan hóa:** Khung tiêu điểm *Landed Cost Spotlight* và thanh cơ cấu chi phí 3 màu (Giá sỉ 96.1% • Cước xe 2.6% • Bao bì 1.3%).
+
+### 🔹 Tính Năng 2: Quản Lý & Thêm Mẫu Mới Vào Lô Hàng Động (Dynamic Inbound SKU Management)
+* **Bài toán giải quyết:** Cho phép chủ shop / thủ kho phát sinh thêm bất kỳ mẫu áo, màu, size mới nào vào lô hàng đang nhập.
+* **Cơ chế vận hành:**
+  - Hộp thoại Modal: Nhập mã SKU, tên mẫu áo, chất liệu vải, size (`Size S` $\rightarrow$ `Free Size`), số lượng và giá sỉ.
+  - **Live Projected Landed Cost:** Tự tính trước giá vốn dự kiến ngay trên Modal trước khi thêm.
+  - **Tự động chia lại cước:** Khi thêm mẫu mới, tổng sản lượng lô tăng lên, hệ thống tự động tính lại cước bổ đầu và cập nhật lại toàn bộ bảng giá vốn của các mẫu còn lại.
+  - Hỗ trợ nút xóa mẫu `[✕]` trên từng dòng và đồng bộ tức thì sang Database catalog qua `POST /api/v1/catalog/variants`.
+
+### 🔹 Tính Năng 3: Thác Nước Lợi Nhuận Ròng Từng Đơn (Order Net Profit Waterfall Ledger)
+* **Bài toán giải quyết:** Bóc tách từng đồng chi phí bị trừ ngầm để biết chính xác mỗi đơn hàng thực nhận bao nhiêu tiền vào tài khoản.
+* **Luồng khấu trừ 5 bước (Waterfall):**
+  $$\text{Doanh Thu Khách Trả} \rightarrow -\text{Phí Sàn \& Voucher} \rightarrow -\text{Giá Vốn Landed COGS} \rightarrow -\text{Hộp Gói Hàng} = \mathbf{\text{Lợi Nhuận Ròng Thực Tế}}$$
+* **Bộ lọc thông minh:** Lọc theo kênh bán (*TikTok Shop, Shopee, Facebook POS*) và lọc theo biên lãi (*Lãi cao >40%, Lãi mỏng <20%, Đơn hòa vốn/lỗ*).
+
+> **Lộ trình Mở rộng Giai đoạn 2 (Future Roadmap):**  
+> *Tính năng 4: Phân loại vật lý và chốt lỗ kế toán hàng hoàn (Return Loss Triage & Accounting)* được dời sang Phase 2 để ưu tiên tập trung tối ưu hóa 3 tính năng cốt lõi trên.
 
 ---
 
-##  3. Phạm Vi Triển Khai Trọng Tâm (MVP Scope - 11/09/2026)
+## 👥 3. Phân Tích Vai Trò & Sơ Đồ Use Case (Roles & Use Case Diagram)
 
-Hệ thống ưu tiên xây dựng **2 chức năng xương sống** quyết định độ chính xác của toàn bộ dữ liệu tài chính:
+Xem tài liệu chi tiết tại: [docs/usecase.md](file:///c:/AI_thuc_chien_khoa_3/VSF/Day1_intern_VSF/docs/usecase.md)
 
-###  Chức Năng 1: Quản Lý Phiếu Nhập & Tự Động Tính Giá Vốn Cập Kho (Inbound Orders & Landed Cost)
-* **Lý do lựa chọn:** Không có giá vốn chuẩn xác thì mọi báo cáo lãi lỗ đầu ra đều vô nghĩa.
-* **Nghiệp vụ chi tiết:**
-  - Khởi tạo Phiếu nhập hàng (Purchase Order - PO) gắn với Nhà cung cấp.
-  - Nhập chi tiết danh sách SKU (Mẫu - Màu - Size), số lượng, đơn giá mua sỉ.
-  - Khai báo chi phí vận chuyển kiện hàng, cước xe tải, phụ phí đóng gói riêng.
-  - Tự động phân bổ chi phí kiện hàng vào từng sản phẩm theo tỷ lệ số lượng hoặc giá trị.
-  - Sinh mã vạch (Barcode) theo chuẩn SKU nội bộ để in tem dán trực tiếp lên túi zip.
+### Danh Sách Actors
+- **Thủ kho / Vận hành (Ops Staff):** Nhập phiếu hàng, khai báo cước xe, thêm mẫu mới vào lô, điều chỉnh số lượng và in mã vạch barcode.
+- **Chủ shop / Kế toán (Shop Owner / Finance):** Giám sát bảng Thác nước lợi nhuận đa sàn, đối soát ví sàn, theo dõi 4 KPI tài chính và tối ưu danh mục sản phẩm sinh lời.
 
-###  Chức Năng 2: Quản Lý Đơn Bán & Tính Lợi Nhuận Ròng Theo Đơn (Order Settlement & Net Profit Engine)
-* **Lý do lựa chọn:** Trả lời trực tiếp câu hỏi sống còn của chủ shop: *"Mỗi đơn hàng bán ra thực chất đang lời hay lỗ bao nhiêu tiền?"*
-* **Nghiệp vụ chi tiết:**
-  - Tiếp nhận đơn bán từ các kênh (Shopee, TikTok Shop, Facebook Pos).
-  - Tự động trừ tồn kho theo FIFO và gắn `applied_landed_cogs` vào từng `order_item`.
-  - Tự động bóc tách doanh thu và các dòng chi phí:
-    $$\text{Lợi Nhuận Ròng Đơn} = \text{Doanh Thu Thực Nhận} - \text{Giá Vốn Cập Kho (COGS)} - \text{Phí Sàn} - \text{Chi Phí Bao Bì} - \text{Tổn Thất Hoàn (nếu có)}$$
-  - Báo cáo thời gian thực biên lợi nhuận ròng (Net Margin %) trên từng đơn và từng dòng sản phẩm.
+### Sơ Đồ Mermaid Use Case
+```mermaid
+graph LR
+    UserOps(["👷 Thủ kho / Vận hành"])
+    UserOwner(["👑 Chủ shop / Tài chính"])
+
+    subgraph System ["Hệ thống FashionRev-Ops (3 Tính Năng Cốt Lõi)"]
+        UC1["1. Tạo Phiếu Nhập Hàng PO"]
+        UC2["2. Phân Bổ Cước Xe Landed Cost"]
+        UC3["3. Thêm Mẫu Mới Vào Lô (Dynamic SKU)"]
+        UC4["4. Điều Chỉnh / Xóa Mẫu Khỏi Lô"]
+        UC5["5. Xem Thác Nước Lãi Ròng Từng Đơn"]
+        UC6["6. Lọc Đơn Hàng Đa Sàn (TikTok/Shopee/FB)"]
+        UC7["7. Giám Sát 4 KPI Tài Chính Cốt Lõi"]
+    end
+
+    UserOps --> UC1
+    UserOps --> UC2
+    UserOps --> UC3
+    UserOps --> UC4
+
+    UserOwner --> UC1
+    UserOwner --> UC5
+    UserOwner --> UC6
+    UserOwner --> UC7
+
+    UC1 -.->|include| UC2
+    UC3 -.->|tự động chia lại cước| UC2
+    UC4 -.->|cập nhật sản lượng| UC2
+    UC5 -.->|tổng hợp doanh thu & lãi| UC7
+```
 
 ---
 
-##  4. Thiết Kế Cơ Sở Dữ Liệu (Database Schema)
+## 🏛️ 4. Kiến Trúc Thông Tin (Information Architecture - IA)
 
-Hệ thống thiết kế theo chuẩn CSDL quan hệ tối ưu hóa cho bài toán thương mại điện tử:
+Xem tài liệu chi tiết tại: [docs/information_architecture.md](file:///c:/AI_thuc_chien_khoa_3/VSF/Day1_intern_VSF/docs/information_architecture.md)
+
+Cấu trúc phân tầng dữ liệu qua 3 Màn hình Tabs:
+```plaintext
+CẤU TRÚC HỆ THỐNG (INFORMATION ARCHITECTURE)
+├── [Tab 1] Overview Dashboard (Tổng quan Hoạt động & Lợi nhuận)
+│   ├── Khối 4 KPI Tài chính: Doanh thu sàn | Giá vốn COGS | Phí sàn & bao bì | Lợi nhuận ròng thực
+│   ├── Khối tóm tắt Nhập hàng & Landed Cost (Công thức, bảng SKU, nút tạo mới)
+│   └── Khối tóm tắt Đơn bán & Thác nước chi phí đa sàn (TikTok Shop, Shopee, FB POS)
+│
+├── [Tab 2] Inbound Landed Cost (Chi tiết Phiếu Nhập & Phân Bổ Giá Vốn)
+│   ├── Breadcrumbs điều hướng & Nút đồng bộ kế toán ERP
+│   ├── Cột trái: Thông số lô hàng (Xưởng may, Cước xe, Phí bốc dỡ, Phí túi zip)
+│   ├── Cột phải: Xem trước phân bổ thời gian thực (Cước bổ đầu, Tiêu điểm Landed Cost)
+│   ├── Bảng SKU chi tiết: Tìm kiếm, Lọc Size, Nút [➕ Add New SKU to Batch], Nút xóa [✕]
+│   └── Modal Thêm Mẫu Mới: Điền SKU, Size, Tên áo, Vải, SL, Giá sỉ -> Tự động chia lại cước
+│
+└── [Tab 3] Order Net Profit (Thác Nước Lợi Nhuận Đơn Hàng Đa Sàn)
+    ├── Thẻ chỉ số: Tỷ suất biên lãi ròng trung bình (45.2%) | Tổng đơn hoàn thành (2,450 đơn)
+    ├── Bộ lọc đa chiều: Lọc theo kênh bán, Kỳ đối soát, Lọc theo biên lãi (>40%, <20%, đơn lỗ)
+    └── Bảng Waterfall Ledger 7 cột: Bóc tách từng khoản trừ từ Doanh thu đến Lãi đút túi
+```
+
+---
+
+## 🖼️ 5. Hình Ảnh Giao Diện Thực Tế (UI/UX Mockups & Screenshots)
+
+Giao diện được thiết kế theo phong cách **Light SaaS tối giản, tinh tế** và hiển thị 100% bằng tiếng Anh chuẩn e-commerce:
+
+### 5.1. Màn Hình 1: Tổng Quan Dashboard (Overview Dashboard)
+![Overview Dashboard](docs/screenshots/dashboard_overview.png)
+*Tích hợp 4 KPI tài chính trên cùng, bộ tính Landed Cost bên trái, Thác nước chi phí đơn hàng bên phải.*
+
+---
+
+### 5.2. Màn Hình 2: Chi Tiết Phiếu Nhập & Phân Bổ Giá Vốn (Inbound Landed Cost)
+![Inbound Landed Cost](docs/screenshots/inbound_landed_cost.png)
+*Bộ thông số cước xe, thuật toán phân bổ thời gian thực, bảng danh mục biến thể SKU có nút **`[➕ Add New SKU to Batch]`** để thêm mẫu mới.*
+
+---
+
+### 5.3. Màn Hình 3: Thác Nước Lợi Nhuận Đơn Hàng (Order Net Profit Waterfall Ledger)
+![Order Net Profit](docs/screenshots/order_net_profit.png)
+*Bảng Waterfall Ledger bóc tách dòng tiền từng đơn hàng đa sàn từ Doanh thu khách trả, Phí hoa hồng sàn, Landed COGS và Túi bọc hàng để tính chính xác Lãi ròng đút túi.*
+
+---
+
+## 🗄️ 6. Thiết Kế Cơ Sở Dữ Liệu (Database Schema & DBML)
+
+- File thiết kế chuẩn DBML: [docs/schema.dbml](file:///c:/AI_thuc_chien_khoa_3/VSF/Day1_intern_VSF/docs/schema.dbml)  
+  *(Dán toàn bộ mã trong file này vào [dbdiagram.io](https://dbdiagram.io/) để xuất biểu đồ quan hệ ERD trực quan).*
+- File mã nguồn SQL DDL: `init-scripts/01_schema.sql` (PostgreSQL 16).
 
 ```mermaid
 erDiagram
-    PRODUCTS_VARIANTS ||--o{ PURCHASE_ORDER_ITEMS : contains
+    CATEGORIES ||--|{ PRODUCTS : classifies
+    SUPPLIERS ||--|{ PURCHASE_ORDERS : provides
+    PRODUCTS ||--|{ PRODUCT_VARIANTS : has_variants
+    PRODUCT_VARIANTS ||--o{ PURCHASE_ORDER_ITEMS : contains
     PURCHASE_ORDERS ||--|{ PURCHASE_ORDER_ITEMS : includes
-    PRODUCTS_VARIANTS ||--o{ ORDER_ITEMS : ordered_in
+    PRODUCT_VARIANTS ||--o{ ORDER_ITEMS : ordered_in
     ORDERS ||--|{ ORDER_ITEMS : contains
 
-    PRODUCTS_VARIANTS {
-        bigint id PK
-        string sku UK "Mã SKU (VD: AO-THUN-DEN-L)"
-        string product_name "Tên sản phẩm"
-        string color "Màu sắc"
-        string size "Kích cỡ"
-        string barcode "Mã vạch dán túi zip"
-        int stock_quantity "Tồn kho khả dụng"
-        decimal base_price "Giá niêm yết"
+    PRODUCT_VARIANTS {
+        int id PK
+        string sku UK
+        string color
+        string size
+        string barcode UK
+        decimal base_price
+        int current_stock
     }
 
     PURCHASE_ORDERS {
-        bigint id PK
-        string po_code UK "Mã phiếu nhập (VD: PO-20260911-001)"
-        string supplier_name "Tên xưởng/nhà buôn"
-        decimal total_merchandise_cost "Tổng tiền hàng"
-        decimal shipping_fee "Cước vận chuyển kiện"
-        decimal other_fees "Phí bao bì, bốc xếp, kiểm đếm"
-        int total_quantity "Tổng số lượng hàng nhập"
-        string status "DRAFT | CONFIRMED | RECEIVED"
-        datetime created_at
+        int id PK
+        string po_code UK
+        decimal shipping_fee
+        decimal other_fees
+        int total_quantity
+        string status
     }
 
     PURCHASE_ORDER_ITEMS {
-        bigint id PK
-        bigint po_id FK
-        bigint variant_id FK
-        int quantity "Số lượng nhập"
-        decimal unit_cost "Giá mua sỉ"
-        decimal allocated_freight "Cước vận chuyển phân bổ/sp"
-        decimal landed_cost "Giá vốn cập kho thực tế/sp"
+        int id PK
+        decimal unit_cost
+        decimal allocated_freight
+        decimal landed_cost
     }
 
     ORDERS {
-        bigint id PK
-        string order_sn UK "Mã đơn hàng sàn/shop"
-        string platform "TIKTOK | SHOPEE | FACEBOOK | OFFLINE"
-        decimal gross_sales "Tổng tiền khách trả"
-        decimal platform_fee "Tổng phí sàn thu"
-        decimal shipping_fee_shop "Phí ship shop chịu (nếu có)"
-        string order_status "PENDING | DELIVERED | RETURNED | CANCELLED"
-        string return_condition "NONE | INTACT (Nguyên vẹn) | DAMAGED (Lỗi/Hỏng)"
-        decimal return_loss_cost "Chi phí tổn thất hàng hoàn"
-        decimal net_settlement_amount "Tiền thực nhận ví sàn"
-        datetime order_date
+        int id PK
+        string order_sn UK
+        string platform
+        decimal gross_sales
+        decimal platform_fee
+        string return_condition
+        decimal return_loss_cost
     }
 
     ORDER_ITEMS {
-        bigint id PK
-        bigint order_id FK
-        bigint variant_id FK
-        int quantity "Số lượng bán"
-        decimal selling_price "Giá bán thực tế/sp"
-        decimal applied_landed_cogs "Giá vốn Landed Cost đóng băng/sp"
-        decimal net_profit "Lợi nhuận ròng của item"
+        int id PK
+        decimal applied_landed_cogs
+        decimal packaging_expense
+        decimal net_margin
     }
 ```
 
 ---
 
-##  5. Phân Quyền Người Dùng (Role-Based Access Control)
-
-| Vai trò (Role) | Trách nhiệm chính | Quyền hạn trên hệ thống |
-| :--- | :--- | :--- |
-| **Chủ Shop (Owner / Admin)** | Ra quyết định nhập hàng, duyệt chiến lược giá, quản trị lãi/lỗ | Toàn quyền; xem báo cáo P&L, tỷ lệ hoàn, tốc độ quay vòng vốn |
-| **Kế Toán Đối Soát (Accountant)** | Kiểm tra dòng tiền, sao kê ví sàn, kiểm toán giá vốn | Đối soát đơn hàng, tạo phiếu chi phí ngoài, quản lý sổ quỹ |
-| **Quản Lý Kho / Vận Hành (Ops Lead)** | Nhập kho, in mã vạch, xử lý phân loại hàng hoàn | Tạo PO nhập hàng, in tem Barcode, quét barcode kiểm hàng hoàn |
-| **Trưởng Phòng Marketing (Media Lead)** | Tối ưu chi phí quảng cáo (Ads), xác định mẫu trend | Xem biên lãi ròng theo SKU để phân bổ ngân sách chạy ads |
-
----
-
-##  6. Lộ Trình Phát Triển Toàn Diện (Product Roadmap)
-
-- [x] **Giai đoạn 1 (11/09/2026 - Core Inbound & Landed Cost Engine):**
-  - Quản lý danh mục Sản phẩm & Biến thể đa thuộc tính (Màu, Size, SKU).
-  - Nghiệp vụ Phiếu nhập (PO) và phân bổ cước kiện tự động ra Landed Cost.
-  - Quản lý đơn bán hàng và Snapshot giá vốn từng đơn.
-- [ ] **Giai đoạn 2 (Return Operations & Reconciliation):**
-  - Module quét mã vận đơn phân loại hàng hoàn (Nguyên tem vs Hàng hỏng).
-  - Tự động đối soát file Excel sao kê ví Shopee / TikTok Shop.
-- [ ] **Giai đoạn 3 (Inventory Turnover & Deadstock Intelligence):**
-  - Báo cáo phân tích tốc độ thoát hàng theo SKU.
-  - Cảnh báo hàng tồn kho quá 20 ngày (Deadstock Alert) để lên kịch bản xả lỗ kịp thời.
-
----
-
-##  7. Hướng Dẫn Cài Đặt & Sử Dụng (Getting Started)
+## ⚙️ 7. Hướng Dẫn Cài Đặt & Chạy Hệ Thống (Getting Started)
 
 ### Yêu Cầu Môi Trường
-- Python 3.10+ / Node.js 18+ (Tùy chọn backend stack)
-- Database: PostgreSQL / MySQL / SQLite
+- **Python:** 3.11+
+- **Docker & Docker Compose:** Dùng để chạy PostgreSQL 16
+- **Trình duyệt web:** Chrome, Edge, Safari
 
-### Quy Trình Vận Hành Mẫu
-1. **Bước 1:** Khởi tạo danh mục sản phẩm và biến thể SKU.
-2. **Bước 2:** Tạo Phiếu Nhập Hàng (PO), nhập giá mua sỉ + tổng tiền cước xe tải chuyển hàng về kho $\rightarrow$ Hệ thống tự động tính **Landed Cost**.
-3. **Bước 3:** In tem barcode dán túi zip cho từng sản phẩm.
-4. **Bước 4:** Khi có đơn hàng từ sàn, tạo đơn bán và xác nhận xuất kho $\rightarrow$ Hệ thống tự động khóa giá vốn và tính toán lãi ròng tức thì.
+### Các Bước Khởi Động
+
+#### 1. Khởi động Cơ sở dữ liệu PostgreSQL
+```bash
+docker compose up -d
+```
+Database chạy tại cổng `5433` (được ánh xạ từ cổng container 5432) với thông tin kết nối trong `.env`:
+`postgresql://postgres:postgrespassword@localhost:5433/fashionrev_db`
+
+#### 2. Khởi động Backend FastAPI
+```bash
+# Cài đặt thư viện phụ thuộc
+pip install -r requirements.txt
+
+# Khởi động máy chủ backend trên cổng 8088
+python -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8088 --reload
+```
+
+#### 3. Truy Cập Hệ Thống
+- **Giao diện Web UI:** [http://localhost:8088/](http://localhost:8088/)
+- **Tài liệu API Swagger:** [http://localhost:8088/docs](http://localhost:8088/docs)
+- **Kiểm tra trạng thái Health:** [http://localhost:8088/api/v1/health](http://localhost:8088/api/v1/health)
 
 ---
 

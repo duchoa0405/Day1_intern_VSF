@@ -1,175 +1,239 @@
-# FashionRev-Ops: Revenue & Net Profit Management System
+#  FashionRev-Ops: Apparel Cashflow & Net Margin Management System
 
-> **Financial & operational management platform tailored for fast-fashion online retail (Ready-to-wear / Pre-stocked apparel).**
-
----
-
-## 1. Business Context & Core Problems
-
-Fast-fashion e-commerce operates on rapid inventory turnover but faces severe margin leakage risks:
-
-1. **Short Trend Lifecycle:** Apparel trends last only 2–4 weeks. Without real-time tracking of net margins and velocity by variant (Size/Color/Form), previous profits get trapped in slow-moving stock (*"Paper Profit, Negative Cash Flow"*).
-2. **Volatile Landed Costs:** Wholesale prices, freight charges, and currency rates fluctuate per batch. COGS cannot be treated as a static number.
-3. **High Return Rates (15%–30%):** Returns cause 2-way shipping costs, damaged packaging, rework labor, and complete COGS loss for unsellable items.
-4. **Marketplace Fee Leakage:** Undetected overcharges (weight discrepancies, shifting platform fees, campaign deductions) erode 3%–7% of revenue.
+> **Digital transformation and financial control platform specifically engineered for ready-to-wear fast-fashion e-commerce retail.**  
+> **System Architecture:** Structured around **3 Core Functional Engines** reflecting actual fashion warehousing, multi-channel selling, and accounting reconciliation.
 
 ---
 
-## 2. Core System Pillars
+##  1. Business Context & Core Pain Points (Top-Down Analysis)
+
+Fast-fashion e-commerce operating under the **pre-stocked / ready-to-wear model** experiences rapid capital turnover but suffers from the highest profit leakage in e-commerce:
+
+1. **Short Trend Lifecycle (2–4 Weeks):** Without variant-level (Size/Color) true landed cost and take-home margin tracking, profits from earlier winning batches get swallowed by slow-moving stock (*"Paper Profit, Negative Cash Flow"*).
+2. **Volatile Landed Costs:** Bulk truck freight and port handling fees change every trip. Relying on invoice wholesale prices hides $0.15–$0.30 of freight per item, eroding profit margins silently.
+3. **Marketplace Fee Creep:** Commission fees (9%–12%), vouchers, packaging expenses, and weight overcharges eat away gross margins unless audited at the unit level.
 
 ```mermaid
 flowchart TD
-    A[Supplier / Factory] -->|1. PO + Freight Cost| B(Landed Cost Allocation Engine)
-    B -->|2. Inbound & Barcode Labeling| C[Variant Inventory]
-    C -->|3. Order Dispatch & COGS Snapshot| D[Channels: TikTok / Shopee / FB]
-    D -->|4. Delivered Successfully| E[Wallet Reconciliation & P&L]
-    D -->|4. Customer Returned| F[Return Loss Accounting]
-    E --> G[Real Net Profit Dashboard]
-    F --> G
+    A[Garment Factory / Supplier] -->|1. PO + Truck Freight| B(Landed Cost Allocation Engine)
+    B -->|2. Add New SKUs & Inbound Stock| C[Variant Inventory Warehouse]
+    C -->|3. Dispatch Orders & Freeze COGS| D[Channels: TikTok / Shopee / FB]
+    D -->|4. Order Settlement| E[Order Net Profit Waterfall]
+    E --> G[Executive Financial Dashboard]
 ```
 
-### Landed Cost Allocation
-Automatically allocates freight and packaging into each unit cost:
-$$\text{Landed Cost}_{\text{SKU}} = \text{Wholesale Price} + \frac{\text{Total Inbound Freight} + \text{Handling Fees}}{\text{Total Units Received}} + \text{Packaging/Tag Cost}$$
+---
 
-### Accurate FIFO & COGS Snapshot
-- Depletes inventory based on **First-In, First-Out (FIFO)** per batch.
-- Freezes (`applied_landed_cogs`) onto each order item at fulfillment time to maintain historical reporting integrity.
+##  2. The 3 Core Functional Engines (MVP Scope)
 
-### Return Loss Accounting
-- **Intact returns:** Restocked. Loss recorded = 2-way shipping + damaged polybags + rework cost.
-- **Damaged/Swapped items:** Moved to clearance. **100% COGS loss** is booked immediately.
+Instead of treating the system as a generic ERP, FashionRev-Ops focuses on **3 Core Specialized Engines**:
 
-### Marketplace Reconciliation
-Matches bank payouts with order records to uncover weight penalties, campaign fee discrepancies, and payment gateway charges.
+```
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│                   FASHIONREV-OPS: 3 CORE FUNCTIONAL ENGINES (MVP)                │
+├───────────────────────────────┬──────────────────────────────────────────────────┤
+│ 1. Inbound Landed Cost Engine │ 2. Dynamic Inbound SKU Management                │
+│    • Automated freight split  │    • Add new fashion models/sizes dynamically    │
+│    • Unit Landed Cost formula │    • Pre-calculate landed cost inside modal      │
+│    • Landed Cost spotlight    │    • Auto-redistribute freight across batch      │
+├───────────────────────────────┴──────────────────────────────────────────────────┤
+│ 3. Order Net Profit Waterfall Ledger (Multi-Channel E-Commerce)                  │
+│    • 5-step deduction ledger: Paid -> Fees -> Landed COGS -> Packaging           │
+│    • Take-home unit net margin % analysis                                        │
+│    • Multi-channel filtering: TikTok Shop, Shopee, Facebook POS                  │
+└──────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 🔹 Feature 1: Inbound Landed Cost Engine (True Warehouse Cost)
+* **Business Problem:** Bulk freight and handling fees are paid at the shipment level, not per item.
+* **Transparent Mathematical Formula:**
+  $$\text{Landed Cost}_{\text{SKU}} = \text{Wholesale Price} + \frac{\text{Truck Freight} + \text{Handling Fees}}{\text{Total Units In Batch}} + \text{Polybag \& Tag Fee}$$
+* **Interactive UI:** Real-time calculation preview and 3-color stacked cost composition bar (Wholesale 96.1% • Freight 2.6% • Packaging 1.3%).
+
+### 🔹 Feature 2: Dynamic Inbound SKU Management (Add New Models On The Fly)
+* **Business Problem:** Inbound shipments frequently include unplanned styles, new sizes, or supplementary colorways.
+* **Capabilities:**
+  - `[ Add New SKU to Batch]` Modal: Enter SKU Code, Variant/Size (`Size S` to `Free Size`), Product Name, Fabric Description, Inbound Qty, and Wholesale Price.
+  - **Live Projected Landed Cost:** Previews the exact landed cost inside the modal before adding.
+  - **Automatic Freight Re-allocation:** As the batch quantity increases, truck freight is automatically divided across all items, instantly updating landed costs for the entire PO.
+  - One-click row removal `[✕]` with automatic freight adjustment and catalog persistence via `POST /api/v1/catalog/variants`.
+
+### 🔹 Feature 3: Order Net Profit Waterfall Ledger (Take-Home Unit Margin)
+* **Business Problem:** High gross marketplace sales mask severe fee deductions.
+* **5-Step Cashflow Waterfall Deduction:**
+  $$\text{Customer Paid} \rightarrow -\text{Platform Commission \& Vouchers} \rightarrow -\text{Frozen Landed COGS} \rightarrow -\text{Packaging Box} = \mathbf{\text{True Net Profit In Pocket}}$$
+* **Multi-Dimensional Filters:** Filter by channel (*TikTok Shop, Shopee, Facebook POS*) and by profitability tier (*High Margin >40%, Low Margin <20%, Loss-making*).
+
+> **Future Scope Roadmap (Phase 2):**  
+> *Feature 4: Return Loss Triage & Accounting (Financial Return Allocation)* is scheduled for Phase 2 to focus entirely on core landed cost and net margin transparency for the MVP release.
 
 ---
 
-## 3. Core Scope (MVP - 11/09/2026)
+##  3. Roles & Use Case Diagram
 
-### Feature 1: Inbound Landed Cost Engine (True Warehouse Inbound Cost)
-* **Business Problem & Purpose:** Prevents distorted profit margins caused by static wholesale costing. In ready-to-wear fashion, when ordering 500 units at 75,000 VND ($3.00) with a 1,000,000 VND ($40.00) bulk truck freight fee and 1,000 VND polybag tag surcharge, the true landed unit cost is **78,000 VND ($3.12)**, not 75,000 VND.
-* **Core Capabilities & Interactive UI/UX:**
-  - **Live Landed Cost Calculator:** Real-time dynamic cost distribution preview as freight and handling fees are entered before finalizing the PO.
-  - **Transparent Cost Formula per SKU:**
-    $$\text{Landed Cost}_{\text{SKU}} = \text{Wholesale Unit Price} + \frac{\text{Total Bulk Freight} + \text{Handling}}{\text{Total Units Received}} + \text{Polybag/Tag Cost}$$
-  - **Automated Inventory Inbound:** Instantly syncs PO records, increments variant stock by size/color, and generates SKU barcodes for polybag labeling.
+Detailed documentation: [docs/usecase.md](docs/usecase.md)
 
-### Feature 2: Product & Order Net Profit Engine (True Take-Home Margin)
-* **Business Problem & Purpose:** Solves the *"High Revenue, Empty Wallet"* trap. Selling a 189,000 VND dress on TikTok Shop / Shopee gets eroded by platform commission, payment processing, campaign vouchers, packaging polybags, and return shrinkage. Directly answers: *"How much real cash does each product and order actually bring to the shop?"*
-* **Core Capabilities & Interactive UI/UX:**
-  - **Financial Waterfall Breakdown:** Visual step-by-step cashflow deduction for every order item:
-    $$\text{Gross Customer Payment} \rightarrow -\text{Landed COGS} \rightarrow -\text{Platform Fees} \rightarrow -\text{Packaging} \rightarrow -\text{Return Losses} = \mathbf{\text{True Net Profit}}$$
-  - **Real-Time Profitability Indicators:** Dynamic color-coded badges showing exact net cash profit and net margin percentage (`Net Margin %`).
-  - **Interactive Return Loss Accounting:** One-click financial triage to immediately reflect return losses:
-    - *Intact Return:* Restocked; loss booked = 2-way shipping + damaged packaging (e.g., -35,000 VND).
-    - *Damaged / Swapped Return:* Sent to clearance; **100% unit COGS is written off** as shrinkage loss.
+### Actors
+- **Thủ kho / Vận hành (Ops Staff):** Receives inbound trucks, inputs freight fees, adds new SKUs to batches, adjusts quantities, and prints barcode labels.
+- **Chủ shop / Kế toán (Shop Owner / Finance):** Monitors marketplace deductions, reconciles platform wallets, tracks high-level financial KPIs, and optimizes product catalog profitability.
+
+### Use Case Diagram (Mermaid)
+```mermaid
+graph LR
+    UserOps([" Ops Staff"])
+    UserOwner([" Shop Owner / Finance"])
+
+    subgraph System ["FashionRev-Ops Financial Control System (3 Core Features)"]
+        UC1["1. Create Inbound PO"]
+        UC2["2. Auto-Allocate Landed Cost"]
+        UC3["3. Add New SKU to Batch"]
+        UC4["4. Adjust / Remove SKU from Batch"]
+        UC5["5. View Order Net Profit Waterfall"]
+        UC6["6. Multi-Channel Margin Filtering"]
+        UC7["7. Monitor Executive Financial KPIs"]
+    end
+
+    UserOps --> UC1
+    UserOps --> UC2
+    UserOps --> UC3
+    UserOps --> UC4
+
+    UserOwner --> UC1
+    UserOwner --> UC5
+    UserOwner --> UC6
+    UserOwner --> UC7
+
+    UC1 -.->|include| UC2
+    UC3 -.->|re-distribute freight| UC2
+    UC4 -.->|update batch volume| UC2
+    UC5 -.->|aggregate profit| UC7
+```
 
 ---
 
-## 4. Database Schema
+##  4. Information Architecture (IA)
+
+Detailed documentation: [docs/information_architecture.md](docs/information_architecture.md)
+
+```plaintext
+INFORMATION ARCHITECTURE (3 TABS)
+├── [Tab 1] Overview Dashboard
+│   ├── Top 4 Financial KPIs: Gross Sales | Inbound COGS | Platform & Packaging Fees | True Net Profit
+│   ├── Inbound Landed Cost Summary Card
+│   └── Sales Order Waterfall Stream Card
+│
+├── [Tab 2] Inbound Landed Cost Engine
+│   ├── Breadcrumbs & ERP Sync Controls
+│   ├── Left: Batch Parameters (Supplier, Truck Freight, Handling Fee, Polybag Fee)
+│   ├── Right: Real-time Allocation Preview (Unit Freight, Landed Cost Spotlight)
+│   ├── Interactive SKU Table: Search, Size Filter Pills, [➕ Add New SKU to Batch], [✕] Remove
+│   └── Add SKU Modal: Dynamic form with live projected landed cost preview
+│
+└── [Tab 3] Order Net Profit Waterfall Ledger
+    ├── Net Margin & Fulfilled Volume KPI Pills
+    ├── Channel Toolbar: All Channels | TikTok Shop | Shopee | Facebook POS
+    └── Waterfall Ledger Table: 7 columns tracking deductions from Revenue to Pocketed Cash
+```
+
+---
+
+##  5. UI/UX Screenshots & Interface
+
+Designed with a clean, modern **Light SaaS aesthetic** and fully English-localized:
+
+### 5.1. Overview Dashboard
+![Overview Dashboard](docs/screenshots/dashboard_overview.png)
+
+### 5.2. Inbound Landed Cost Engine
+![Inbound Landed Cost](docs/screenshots/inbound_landed_cost.png)
+
+### 5.3. Order Net Profit Waterfall Ledger
+![Order Net Profit](docs/screenshots/order_net_profit.png)
+
+---
+
+##  6. Database Design (DBML & ERD)
+
+- DBML Schema File: [docs/schema.dbml](docs/schema.dbml)  
+  *(Paste this file into [dbdiagram.io](https://dbdiagram.io/) for interactive relational diagrams).*
+- SQL DDL File: `init-scripts/01_schema.sql` (PostgreSQL 16).
 
 ```mermaid
 erDiagram
-    PRODUCTS_VARIANTS ||--o{ PURCHASE_ORDER_ITEMS : contains
+    CATEGORIES ||--|{ PRODUCTS : classifies
+    SUPPLIERS ||--|{ PURCHASE_ORDERS : provides
+    PRODUCTS ||--|{ PRODUCT_VARIANTS : has_variants
+    PRODUCT_VARIANTS ||--o{ PURCHASE_ORDER_ITEMS : contains
     PURCHASE_ORDERS ||--|{ PURCHASE_ORDER_ITEMS : includes
-    PRODUCTS_VARIANTS ||--o{ ORDER_ITEMS : ordered_in
+    PRODUCT_VARIANTS ||--o{ ORDER_ITEMS : ordered_in
     ORDERS ||--|{ ORDER_ITEMS : contains
 
-    PRODUCTS_VARIANTS {
-        bigint id PK
-        string sku UK "e.g., TEE-BLK-L"
-        string product_name
+    PRODUCT_VARIANTS {
+        int id PK
+        string sku UK
         string color
         string size
-        string barcode
-        int stock_quantity
+        string barcode UK
         decimal base_price
+        int current_stock
     }
 
     PURCHASE_ORDERS {
-        bigint id PK
-        string po_code UK "e.g., PO-20260911-001"
-        string supplier_name
-        decimal total_merchandise_cost
+        int id PK
+        string po_code UK
         decimal shipping_fee
         decimal other_fees
         int total_quantity
-        string status "DRAFT | CONFIRMED | RECEIVED"
-        datetime created_at
+        string status
     }
 
     PURCHASE_ORDER_ITEMS {
-        bigint id PK
-        bigint po_id FK
-        bigint variant_id FK
-        int quantity
+        int id PK
         decimal unit_cost
         decimal allocated_freight
         decimal landed_cost
     }
 
     ORDERS {
-        bigint id PK
-        string order_sn UK "Marketplace Order ID"
-        string platform "TIKTOK | SHOPEE | FACEBOOK | OFFLINE"
+        int id PK
+        string order_sn UK
+        string platform
         decimal gross_sales
         decimal platform_fee
-        decimal shipping_fee_shop
-        string order_status "PENDING | DELIVERED | RETURNED | CANCELLED"
-        string return_condition "NONE | INTACT | DAMAGED"
+        string return_condition
         decimal return_loss_cost
-        decimal net_settlement_amount
-        datetime order_date
     }
 
     ORDER_ITEMS {
-        bigint id PK
-        bigint order_id FK
-        bigint variant_id FK
-        int quantity
-        decimal selling_price
-        decimal applied_landed_cogs "Frozen COGS snapshot"
-        decimal net_profit
+        int id PK
+        decimal applied_landed_cogs
+        decimal packaging_expense
+        decimal net_margin
     }
 ```
 
 ---
 
-## 5. Role-Based Access Control (RBAC)
-
-| Role | Key Responsibility | System Permissions |
-| :--- | :--- | :--- |
-| **Owner / Admin** | Overall profitability, strategic pricing, inventory budget | Full access; view real-time P&L, return rate & turnover metrics |
-| **Accountant** | Cashflow reconciliation, fee audit, expense tracking | Reconcile marketplace payouts, record OPEX & ledger entries |
-| **Operations / Warehouse** | Inbound receiving, barcode labeling, return grading | Manage POs, print SKU barcodes, process return inspections |
-| **Marketing Lead** | Ads performance, product trend analysis | Access item-level net margin to optimize ROAS & ad budget |
-
----
-
-## 6. Implementation Roadmap
-
-- [x] **Phase 1 (11/09/2026 - Core Inbound & Landed Cost Engine):**
-  - Variant catalog management (SKU, Color, Size, Barcode).
-  - PO creation with automated Landed Cost allocation.
-  - Order fulfillment with FIFO COGS snapshot & margin calculation.
-- [ ] **Phase 2 (Return Operations & Reconciliation):**
-  - Barcode scanner integration for return triage (Intact vs Damaged).
-  - Automated statement import for Shopee / TikTok Shop fee reconciliation.
-- [ ] **Phase 3 (Inventory Velocity & Deadstock Intelligence):**
-  - SKU-level sales velocity tracking.
-  - 20-day slow-moving/deadstock alerts to trigger markdown workflows.
-
----
-
-## 7. Getting Started
+##  7. Getting Started
 
 ### Prerequisites
-- Python 3.10+ / Node.js 18+
-- Relational Database: PostgreSQL / MySQL / SQLite
+- Python 3.11+
+- Docker & Docker Compose (for PostgreSQL 16)
+- Modern Web Browser (Chrome, Edge, Safari)
 
-### Standard Workflow
-1. **Step 1:** Create product catalog and define variant SKUs.
-2. **Step 2:** Generate Purchase Order (PO) with wholesale costs and freight fee $\rightarrow$ System auto-calculates **Landed Cost**.
-3. **Step 3:** Print SKU barcode labels and attach them to polybags upon receiving.
-4. **Step 4:** Fulfill incoming sales orders $\rightarrow$ System freezes COGS via FIFO and calculates net profit per item in real time.
+### Quick Run
+```bash
+# 1. Start PostgreSQL Database
+docker compose up -d
+
+# 2. Install dependencies & start FastAPI backend
+pip install -r requirements.txt
+python -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8088 --reload
+
+# 3. Access Web Application
+# Frontend UI: http://localhost:8088/
+# Swagger Docs: http://localhost:8088/docs
+```
+
+---
+

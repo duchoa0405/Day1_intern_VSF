@@ -1,0 +1,27 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Environment variables
+.env
+.env.*
+
+# Local scratch & temp files
+scratch/
+*.temp
+.tempmediaStorage/
+.user_uploaded/
+
+# OS specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Virtual Environment
+venv/
+.venv/
+env/

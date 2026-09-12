@@ -2,7 +2,8 @@ from decimal import Decimal
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from backend.app.models.purchase_order import PurchaseOrder, PurchaseOrderItem
-from backend.app.models.product import ProductVariant
+from backend.app.models.purchase_order import PurchaseOrder, PurchaseOrderItem
+from backend.app.models.product import Product, ProductVariant
 from backend.app.schemas.purchase_order import PurchaseOrderCreate
 
 class LandedCostService:
@@ -46,11 +47,42 @@ class LandedCostService:
 
         # 6. Duyệt từng SKU để tính Landed Cost và cập nhật Tồn kho
         for item_in in po_in.items:
-            variant = db.query(ProductVariant).filter(ProductVariant.id == item_in.variant_id).first()
+            variant = None
+            if item_in.variant_id:
+                variant = db.query(ProductVariant).filter(ProductVariant.id == item_in.variant_id).first()
+            elif item_in.sku:
+                variant = db.query(ProductVariant).filter(ProductVariant.sku == item_in.sku).first()
+                if not variant:
+                    import re, time
+                    p_name = item_in.product_name or f"Sản phẩm {item_in.sku}"
+                    product = db.query(Product).filter(Product.name == p_name).first()
+                    if not product:
+                        code_slug = "PROD-" + re.sub(r'[^A-Za-z0-9]+', '-', p_name).strip('-').upper()[:20]
+                        product = Product(
+                            category_id=1,
+                            product_code=code_slug,
+                            name=p_name,
+                            material="Cotton Standard"
+                        )
+                        db.add(product)
+                        db.flush()
+                    barcode = f"893{int(time.time()) % 1000000000:09d}"
+                    variant = ProductVariant(
+                        product_id=product.id,
+                        sku=item_in.sku,
+                        color="Standard",
+                        size=item_in.size or "Free Size",
+                        barcode=barcode,
+                        base_price=Decimal("189000.00"),
+                        current_stock=0
+                    )
+                    db.add(variant)
+                    db.flush()
+
             if not variant:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
-                    detail=f"Không tìm thấy biến thể sản phẩm có ID: {item_in.variant_id}"
+                    detail=f"Không tìm thấy biến thể sản phẩm có ID: {item_in.variant_id} hoặc SKU: {item_in.sku}"
                 )
 
             unit_cost = Decimal(str(item_in.unit_cost))
